@@ -1,0 +1,97 @@
+<div class="col-lg-10">
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="input-group col-10">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="cil-search"></i></span>
+            </div>
+            <div class="search-hero">
+              <input class="form-control" type="search" [(ngModel)]="searchText" placeholder="Buscar" autocomplete="off" size="35" >
+            </div>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-primary float-right" *ngIf="accesos.alta==='Y'" (click)="openToAdd()">+Nuevo</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let items of marcas | filter: 'nombre' : searchText">
+              <td>{{items.id}}</td>
+              <td>{{items.nombre}}</td>
+              <td>
+                <button (click)="openToModify(items.id)" *ngIf="accesos.cambio==='Y'" class="btn btn-warning text-white"><i class="cil-pencil"></i></button>
+                <button (click)="openToDelete(items.id, items.nombre)" *ngIf="accesos.baja==='Y'" class="btn btn-danger text-white"><i class="cil-trash"></i></button>
+                <!-- <button (click)="openToVisualy(items.id)" *ngIf="accesos.consulta==='Y'" class="btn btn-info text-white"><i class="cil-find-in-page"></i></button> -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal #entityModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    <div class="modal-dialog modal-primary" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{title}}</h4>
+          <button type="button" class="close" (click)="entityModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+              <form class="form-horizontal" [formGroup]="modalForm" (ngSubmit)="saveChanges()" novalidate>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label class="col-form-label" for="nombreInput">Nombre</label>
+
+
+                        <input id="nombreInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" formControlName="nombre" size="16" type="text" [disableControl]="modalMode===0" required>
+
+
+                    <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback">
+                      <div *ngIf="f.nombre.errors.required">El nombre es requerido</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
+                  <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+<!--Modal de Eliminacion-->
+<div bsModal #deleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="deleteModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea eliminar el registro?</p>
+        <p>{{selId+' - '+ selName}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="deleteModal.hide()">Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteReg()">Eliminar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

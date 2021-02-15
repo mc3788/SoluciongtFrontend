@@ -1,0 +1,66 @@
+<div class="animated fadeIn">
+     <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i> Resumen Gastos por día
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Descripción</th>
+                      <th>Monto</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let items of debitosCaja">
+                      <td>{{items.fecha | date : 'longDate' : '-6' : 'es-GT'}}</td>
+                      <td>{{items.descripcion}}</td>
+                      <td>Q.{{items.monto}}</td>
+                      <td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <hr>
+                    <p [style.font-size.em]="'2'"><strong>Total: Q.{{sumDebitos}}</strong></p>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-align-justify"></i> Resumen Abonos por día
+                </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let items of creditosCaja">
+                        <td>{{items.fecha | date : 'longDate' : '-6' : 'es-GT'}}</td>
+                        <td>{{items.descripcion}}</td>
+                        <td>Q.{{items.monto}}</td>
+                        <td>
+                      </tr>
+                      <tr>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <hr>
+                      <p [style.font-size.em]="'2'"><strong>Total: Q.{{sumCreditos}}</strong></p>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+          </div>
+     </div>
+</div>

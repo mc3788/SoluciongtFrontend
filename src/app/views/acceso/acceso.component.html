@@ -1,0 +1,163 @@
+<div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="input-group col-10">
+            <div class="input-group-prepend">
+              <!-- <span class="input-group-text"><i class="cil-search"></i></span> -->
+            </div>
+            <div class="search-hero">
+              <!-- <input class="form-control" type="search" [(ngModel)]="searchText" placeholder="Buscar" autocomplete="off" size="35" > -->
+            </div>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-primary float-right" *ngIf="accesos.alta==='Y'" (click)="openToAdd()">+Nuevo</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Id</th>
+            <th>Perfil</th>
+            <th>Opcion</th>
+            <th>Alta</th>
+            <th>Baja</th>
+            <th>Cambio</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let items of accesos1">
+            <td>{{items.id}}</td>
+            <td>{{items.perfil.descripcion}}</td>
+            <td>{{items.opcion.descripcion}}</td>
+            <td>{{items.alta}}</td>
+            <td>{{items.baja}}</td>
+            <td>{{items.cambio}}</td>
+            <td>
+              <button (click)="openToModify(items.id)" *ngIf="accesos.cambio==='Y'" class="btn btn-warning text-white"><i class="cil-pencil"></i></button>
+              <button (click)="openToDelete(items.id, items.perfil.descripcion,items.opcion.descripcion)" *ngIf="accesos.baja==='Y'" class="btn btn-danger text-white"><i class="cil-trash"></i></button>
+              <!-- <button (click)="openToVisualy(items.id)" *ngIf="accesos.consulta==='Y'" class="btn btn-info text-white"><i class="cil-find-in-page"></i></button> -->
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal #entityModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="entityModal"
+  aria-hidden="true">
+      <div class="modal-dialog modal-primary modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">{{title}}</h4>
+              <button type="button" class="close" (click)="entityModal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form class="form-horizontal" [formGroup]="modalForm" (ngSubmit)="saveChanges()">
+              <div class="modal-body">
+
+                <div class="form-group">
+                  <label class="col-form-label" for="perfilSelect">Perfil</label>
+                      <select id="perfilSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.perfil.errors }"
+                              formControlName="perfil" name="perfilSelect" [disableControl]="modalMode===0" required>
+                        <option *ngFor="let p of perfiles" value="{{p.id}}">{{p.descripcion}}</option>
+                      </select>
+                      <div *ngIf="submitted && f.perfil.errors" class="invalid-feedback">
+                        <div *ngIf="f.perfil.errors.required">El perfil es requerido</div>
+                      </div>
+      
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label" for="opcionSelect">Opción</label>
+                      <select id="opcionSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.opcion.errors }"
+                              formControlName="opcion" name="opcionSelect" [disableControl]="modalMode===0">
+                        <option *ngFor="let op of opciones" value="{{op.id}}">{{op.descripcion}}</option>
+                      </select>
+                  <div *ngIf="submitted && f.opcion.errors" class="invalid-feedback">
+                    <div *ngIf="f.opcion.errors.required">La opción es requerida</div>
+                  </div>
+
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label" for="altaOpcionSelect">Alta</label>
+                  <div class="controls">
+                    <div class="input-prepend input-group">
+                      <select id="altaOpcionSelect" class="form-control" formControlName="alta" name="altaOpcionSelect" [disableControl]="modalMode===0">
+                        <option value="Y">Si</option>
+                        <option value="N">No</option>
+                      </select>
+                    </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label" for="bajaOpcionSelect">Baja</label>
+                <div class="controls">
+                  <div class="input-prepend input-group">
+                    <select id="bajaOpcionSelect" class="form-control" formControlName="baja" name="bajaOpcionSelect" [disableControl]="modalMode===0">
+                      <option value="Y">Si</option>
+                      <option value="N">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label" for="cambioOpcionSelect">Cambio</label>
+                <div class="controls">
+                  <div class="input-prepend input-group">
+                    <select id="cambioOpcionSelect" class="form-control" formControlName="cambio" name="cambioOpcionSelect" [disableControl]="modalMode===0">
+                      <option value="Y">Si</option>
+                      <option value="N">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label" for="consultaOpcionSelect">Consulta</label>
+                <div class="controls">
+                  <div class="input-prepend input-group">
+                    <select id="consultaOpcionSelect" class="form-control" formControlName="consulta" name="consultaOpcionSelect" [disableControl]="modalMode===0">
+                      <option value="Y">Si</option>
+                      <option value="N">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
+                <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
+              </div>
+          </form>
+          </div>
+      </div>
+  </div>
+
+  <!--Modal de Eliminacion-->
+  <div bsModal #deleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-danger" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{title}}</h4>
+          <button type="button" class="close" (click)="deleteModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>¿Desea eliminar el registro?</p>
+          <p>{{selId+' - '+ selName+' - '+selName2}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="deleteModal.hide()">Cancelar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="deleteReg()">Eliminar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+

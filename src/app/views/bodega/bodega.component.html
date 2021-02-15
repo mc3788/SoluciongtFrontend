@@ -1,0 +1,144 @@
+<div class="col-lg-12">
+  <div class="card">
+    <div class="card-header">
+      <div class="col-sm-6">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="cil-search"></i></span>
+          </div>
+          <input class="form-control" type="search" [(ngModel)]="searchText" placeholder="Buscar" autocomplete="off"
+                 size="35">
+          <div>
+            <button type="button" class="btn btn-primary float-right" *ngIf="accesos.alta==='Y'" (click)="openToAdd()">
+              +Nuevo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let items of bodegas | filter: 'descripcion' : searchText">
+          <td>{{items.id}}</td>
+          <td>{{items.descripcion}}</td>
+          <td>
+            <h5>
+              <span class="badge badge-success" *ngIf="items.estado==='A'">Activo</span>
+              <span class="badge badge-danger" *ngIf="items.estado==='B'">Inactivo</span>
+            </h5>
+          </td>
+          <td>
+            <button (click)="openToModify(items.id)" *ngIf="accesos.cambio==='Y'" class="btn btn-warning text-white"><i
+              class="cil-pencil"></i></button>
+            <button (click)="openToDelete(items.id, items.descripcion)" *ngIf="accesos.cambio==='Y'"
+                    class="btn btn-danger text-white"><i class="cil-trash"></i></button>
+            <button (click)="openToVisualy(items.id)" *ngIf="accesos.cambio==='Y'" class="btn btn-info text-white"><i
+              class="cil-find-in-page"></i></button>
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+      <!-- <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Prev</a></li>
+        <li class="page-item active">
+          <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">4</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul> -->
+    </div>
+  </div>
+</div>
+
+<div bsModal #entityModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="entityModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-horizontal" [formGroup]="modalForm" (ngSubmit)="saveChanges()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-form-label" for="descripciondInput">Descripción</label>
+
+            <input id="descripciondInput" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }" formControlName="descripcion"
+                   size="16" type="text" [disableControl]="modalMode==0" required>
+
+            <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback">
+              <div *ngIf="f.descripcion.errors.required">La descripción es requerida</div>
+            </div>
+
+          </div>
+          <div class="form-group">
+            <label class="col-form-label" for="observacionesInput">Observaciones</label>
+            <div class="controls">
+              <div class="input-prepend input-group">
+                <input id="observacionesInput" class="form-control" formControlName="observaciones" size="16"
+                       type="text" [disableControl]="modalMode==0">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+
+            <div class="controls">
+              <div class="form-check">
+
+                <!--                          <input id="estadoInput" class="form-control" formControlName="estado" size="16" type="text" [disableControl]="modalMode==0">-->
+                <input id="estadoInput" class="form-check-input" formControlName="estado" type="checkbox"
+                       [disableControl]="modalMode==0">
+                <label class="form-check-label" for="estadoInput">Activo</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
+        </div>
+      </form>
+              
+    </div>
+        
+  </div>
+</div>
+
+<!--Modal de Eliminacion-->
+<div bsModal #deleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="deleteModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea eliminar el registro?</p>
+        <p>{{selId + ' - ' + selName}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="deleteModal.hide()">Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteReg()">Eliminar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
