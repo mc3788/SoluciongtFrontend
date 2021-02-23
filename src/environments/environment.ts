@@ -4,8 +4,10 @@
 
 export const environment = {
   production: false,
-  backenUrl: 'http://localhost:8888/api/',
-  backendAuth: 'http://localhost:8888/api/'
+  backendUrl: 'http://soluciongtbackend.local/api/',
+  backendAuth: 'http://soluciongtbackend.local/api/'
+  // backenUrl: 'http://localhost:8888/api/',
+  // backendAuth: 'http://localhost:8888/api/'
 };
 
 /*
