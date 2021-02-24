@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import {AuthService} from './auth.service';
 import {Router} from '@angular/router';
 
-const backenUrl = environment.backenUrl;
+const backendUrl = environment.backendUrl;
 
 @Injectable()
 export class DataService {
@@ -21,7 +21,7 @@ export class DataService {
       'X-Auth-Token': token
     });
 
-    return this.http.put(backenUrl + entity + '/' + id, JSON.stringify(object), {headers: headers});
+    return this.http.put(backendUrl + entity + '/' + id, JSON.stringify(object), {headers: headers});
   }
 
   // Borrar
@@ -31,7 +31,7 @@ export class DataService {
       'X-Auth-Token': token
     });
 
-    return this.http.delete(backenUrl + entity + '/' + id, {headers: headers});
+    return this.http.delete(backendUrl + entity + '/' + id, {headers: headers});
   }
 
   // Leer
@@ -41,7 +41,7 @@ export class DataService {
       'X-Auth-Token': token
     });
 
-    return this.http.get(backenUrl + entity, {headers: headers});
+    return this.http.get(backendUrl + entity, {headers: headers});
   }
 
   // Insertar
@@ -51,29 +51,29 @@ export class DataService {
       'X-Auth-Token': token
     });
 
-    return this.http.post(backenUrl + entity, JSON.stringify(object), {headers: headers});
+    return this.http.post(backendUrl + entity, JSON.stringify(object), {headers: headers});
   }
 
   // Listado por ID
-  public getListItems(entity: string, token: string, id: number){
+  public getListItems(entity: string, token: string, id: number) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'X-Auth-Token': token
     });
-    console.log(backenUrl + entity+ '/' + id, {headers: headers});
-    return this.http.get(backenUrl + entity+ '/' + id, {headers: headers});
-  };
+    console.log(backendUrl + entity + '/' + id, {headers: headers});
+    return this.http.get(backendUrl + entity + '/' + id, {headers: headers});
+  }
 
 
   // Listado por Fecha
-  public getListDate(entity: string, token: string, fecIni: String, fecFin: String){
+  public getListDate(entity: string, token: string, fecIni: String, fecFin: String) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'X-Auth-Token': token
     });
     /*console.log(backenUrl + entity+ '/' + fecIni+'/' + fecFin);*/
-    return this.http.get(backenUrl + entity+ '/' + fecIni+'/' + fecFin, {headers: headers});
-  };
+    return this.http.get(backendUrl + entity + '/' + fecIni + '/' + fecFin, {headers: headers});
+  }
 
   public getEntityDetail(entity: string, token: string, id: any) {
     const headers = new HttpHeaders({
@@ -81,7 +81,7 @@ export class DataService {
       'X-Auth-Token': token
     });
 
-    return this.http.get(backenUrl + entity + '/' + id, {headers: headers});
+    return this.http.get(backendUrl + entity + '/' + id, {headers: headers});
   }
 
   public validError( error ) {

@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from '../../assets/vfs_fonts';
 import {NumerosALetras} from './numeros-a-letras';
+import {Cotizacion} from '../interface/bo/Cotizacion';
 
 @Injectable()
 export class CreaPdf {
@@ -11,42 +12,22 @@ export class CreaPdf {
   marginHeaderLeft = 400;
 
   data = {
-    header: { fecha: '01/01/2021', noCotizacion: '191', serie: 'E',
-      nog: '13912631', evento: 'S/C', pedido: 'S/C', codigoIGSS: 'S/C', codigoPPR: 'S/C' },
-    cliente: { nombre1: 'DEPARTAMENTO DE COMPRAS', nombre2: 'IGSS, Consultorio Palín, Escuintla' },
-    detalle: [ { cantidad: 1, descripcion: 'Refrigerador Material: Acero galvanizado; Medida: 12 pie Cúbico; Número de puertas: 4; Uso: Conservación de vacunas en cadena de frío; Unidad FIGIDAIRE',
-      precio: 24640 } ],
-    obs: {
-      enletras: 'VEINTICUATRO MIL SETECIENTOS CUARENTA 00/100 QUETZALES',
-      tiempoEntrega: '3 DIAS HABILES DESPUES DE RECIBIDA LA ORDEN DE COMPRA',
-      garantia: '36 MESES POR DESPERFECTOS DE FABRICA',
-      instalacion: 'NO APLICA',
-      oferta: '60 DIAS',
-      lugarEntrega: 'BODEGA DE UNIDAD'
-    },
-    razonSocial: {
-      nombre: 'SOLUCION GT, SOCIEDAD ANONIMA',
-      nombreComercial: 'SOLUCION GT',
-      representante: 'KEVYN ALEJANDRO RAMIREZ CANTORAL',
-      direccion: '11 AVENIDA 15-73 ZONA 17 COLONIA COLEGIO DE MAESTROS, GUATEMALA',
-      nit: '9479828-1',
-      regimenISR: 'SUJETO A PAGOS TRIMESTRALES',
-      cuenta: '3445727767 BANRURAL',
-      telefono: '22551729', email: 'info@soluciongt.com'}
+    enletras: '',
+    tiempoEntrega: '',
+    garantia: '',
+    requiereInstalacion: '',
+    lugarentrega: '****',
 
   };
-
-
+  info: Cotizacion;
 
   constructor( private http: HttpClient, private aLetras: NumerosALetras ) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
-    // ( pdfMake as any ).vfs = pdfFonts.pdfMake.vfs;
-
-
   }
 
-  async createDocument(): Promise<void> {
+  async createDocument( info: Cotizacion): Promise<void> {
     // console.log('Creando documeto pdf');
+    this.info = info;
 
     const def = {
       content: [],
@@ -80,24 +61,24 @@ export class CreaPdf {
 
   async getHeader(): Promise<object[]> {
 
-    const img = this.getBase64Image('assets/images/soluciongt.png').then( value => {
+    const img = this.getBase64Image('assets/img/soluciongt.png').then( value => {
       // console.log(`*** img: ${value} `);
       // console.log(value);
       return [
         {image: value, fit: ['225', '225'], absolutePosition: {x: 365, y: 15} },
         { columns: [
             { text: [ { text: 'FECHA  ', bold: true} ,
-                this.data.header.fecha ]},
+                this.formatDate( this.info.fecha ) ]},
           ], margin: [this.marginHeaderLeft, 20, 0, 0], style: 'header' },
         { columns: [
             {text: [ {text: 'COTIZACION NO.  ', bold: true},
-                this.data.header.noCotizacion
+                this.info.numero
               ]
             },
           ], margin: [this.marginHeaderLeft, 0, 0, 0], style: 'header' },
         { columns: [
             {text: [ {text: 'SERIE  ', bold: true},
-                this.data.header.serie ] },
+                this.info.serie.serie ] },
           ], margin: [this.marginHeaderLeft, 0, 0, 0], style: 'header' }
       ];
     });
@@ -110,8 +91,8 @@ export class CreaPdf {
     return [
       // {text: '', margin: [0, 30, 0, 0]},
       {text: 'SEÑORES', bold: true},
-      {text: this.data.cliente.nombre1, bold: true},
-      {text: this.data.cliente.nombre2, bold: true}
+      {text: this.info.cliente.nombre, bold: true},
+      {text: '****', bold: true}
 
     ];
   }
@@ -128,14 +109,14 @@ export class CreaPdf {
           widths: [ 'auto', '*', 'auto', '*', 'auto', '*' ],
           body: [
             [
-              { text: 'NOG:', bold: true}, { text: this.data.header.nog},
-              { text: 'EVENTO:', align: 'right', bold: true}, { text: this.data.header.evento},
-              { text: 'PEDIDO:', align: 'right', bold: true}, { text: this.data.header.pedido},
+              { text: 'NOG:', bold: true}, { text: this.info.numeroNOG},
+              { text: 'EVENTO:', align: 'right', bold: true}, { text: this.info.evento },
+              { text: 'PEDIDO:', align: 'right', bold: true}, { text: this.info.pedido },
             ],
             [
               { text: '  '}, { text: '  '},
-              { text: 'CODIGO IGSS:', align: 'right', bold: true}, { text: this.data.header.codigoIGSS},
-              { text: 'CODIGO PPR:', align: 'right', bold: true}, { text: this.data.header.codigoPPR},
+              { text: 'CODIGO IGSS:', align: 'right', bold: true}, { text: this.info.codigoIGSS },
+              { text: 'CODIGO PPR:', align: 'right', bold: true}, { text: this.info.codigoPPR },
             ]
           ]
         }}
@@ -147,7 +128,7 @@ export class CreaPdf {
     const det = [];
     const deta = [];
     let tot = 0 ;
-    for ( const dd of this.data.detalle ) {
+    for ( const dd of this.info.detalle ) {
       const x = [ {text: dd.cantidad, alignment: 'center', margin: [ 0, 45, 0 , 0], bold: true },
         {text: dd.descripcion, bold: true },
         { columns: [
@@ -160,6 +141,9 @@ export class CreaPdf {
           ], margin: [ 0, 45, 0 , 0] }
       ];
       tot = tot + ( dd.precio * dd.cantidad );
+      this.data.tiempoEntrega = dd.tiempoEntrega;
+      this.data.garantia = dd.garantia;
+      this.data.requiereInstalacion = dd.requiereInstalacion;
       det.push( ...x );
       deta.push( det );
     }
@@ -185,7 +169,7 @@ export class CreaPdf {
     body.push( ...deta );
     body.push( ...total );
 
-    this.data.obs.enletras = this.aLetras.numerosALetras( tot, null ) + ' QUETZALES';
+    this.data.enletras = this.aLetras.numerosALetras( tot, null ) + ' QUETZALES';
 
     return [
       {text: '', margin: [0, 10, 0, 0]},
@@ -193,30 +177,9 @@ export class CreaPdf {
         table: {
           style: 'bold',
           headerRows: 1,
-          widths: ['*', 'auto', 100, 100],
+          widths: ['auto', '*', 100, 100],
           heights: ['*', 100, '*'],
           body
-          // [ [ {text: 'CANTIDAD', style: 'columnHeader'},
-          //   {text: 'DESCRIPCION', style: 'columnHeader'},
-          //   {text: 'PRECIO UNITARIO', style: 'columnHeader'},
-          //   {text: 'PRECIO TOTAL', style: 'columnHeader'}],
-          // [ {text: '1', alignment: 'center', margin: [ 0, 45, 0 , 0], bold: true },
-          //   {text: 'Refrigerador Material: Acero galvanizado; Medida: 12 pie Cúbico; Número de puertas: 4;
-          //   Uso: Conservación de vacunas en cadena de frío; Unidad FIGIDAIRE', bold: true },
-          //   { columns: [ {width: 'auto', text: 'Q', bold: true }, {width: '*', text: '24,640.00', alignment: 'right', bold: true }],
-          //   margin: [ 0, 45, 0 , 0] },
-          //   { columns: [ {width: 'auto', text: 'Q', bold: true }, {width: '*', text: '24,640.00', alignment: 'right', bold: true }],
-          //   margin: [ 0, 45, 0 , 0] }
-          // ],
-          // [ { colSpan: 2, border: [false, false, false, false],
-          //     text: '***** PRECIOS INCLUYEN IVA *****', bold: true , alignment: 'center'},
-          //   {},
-          //   {text: 'TOTAL', bold: true, alignment: 'right', style: 'columnHeader', margin: [ 0, 2, 0 , 0] },
-          //   { columns: [ {width: 'auto', text: 'Q', bold: true },
-          //   {width: '*', text: '24,640.00', alignment: 'right', bold: true }], margin: [ 0, 2, 0 , 0] , style: 'columnHeader'}
-          //   // {text: 'Q 24,640.00', alignment: 'right', style: 'columnHeader'}
-          //   ]
-          // ]
         }
       }
     ];
@@ -225,27 +188,27 @@ export class CreaPdf {
   private getObs(): object[] {
     return [
       { text: '', margin: [0, 20, 0, 0] },
-      { text: [ {text: 'CANTIDAD EN LETRAS: ', bold: true}, this.data.obs.enletras ] },
-      { text: `TIEMPO DE ENTREGA: ${this.data.obs.tiempoEntrega}`, bold: true },
-      { text: `GARANTIA: ${this.data.obs.garantia}`, bold: true },
-      { text: `INSTALACION: ${this.data.obs.instalacion}`, bold: true },
-      { text: [ { text: 'SOSTENIMIENTO DE OFERTA: ', bold: true }, this.data.obs.oferta] },
-      { text: [ { text: 'LUGAR DE ENTREGA: ', bold: true }, this.data.obs.lugarEntrega ]}
+      { text: [ {text: 'CANTIDAD EN LETRAS: ', bold: true}, this.data.enletras ] },
+      { text: `TIEMPO DE ENTREGA: ${this.data.tiempoEntrega}`, bold: true },
+      { text: `GARANTIA: ${this.data.garantia}`, bold: true },
+      { text: `INSTALACION: ${this.data.requiereInstalacion}`, bold: true },
+      { text: [ { text: 'SOSTENIMIENTO DE OFERTA: ', bold: true }, this.info.oferta] },
+      { text: [ { text: 'LUGAR DE ENTREGA: ', bold: true }, this.data.lugarentrega ]}
     ];
   }
 
   private getBusinessName(): object[] {
     return [
       { text: '', margin: [0, 20, 0, 0] },
-      { text: `RAZON SOCIAL: ${this.data.razonSocial.nombre}`, bold: true },
-      { text: `NOMBRE COMERCIAL: ${this.data.razonSocial.nombreComercial}` },
-      { text: `NOMBRE DEL REPRESENTANTE LEGAL: ${this.data.razonSocial.representante}` },
-      { text: `DIRECCIÓN: ${this.data.razonSocial.direccion}` },
-      { text: `NIT: ${this.data.razonSocial.nit}` },
-      { text: `REGIMEN DE IMPUESTO SOBRE LA RENTA: ${this.data.razonSocial.regimenISR}` },
-      { text: `NÚMERO DE CUENTA BANCARIA MONETARIA: ${this.data.razonSocial.cuenta}` },
-      { text: `TELEFONO: ${this.data.razonSocial.telefono}` },
-      { text: `CORREO ELECTRÓNICO: ${this.data.razonSocial.email}` },
+      { text: `RAZON SOCIAL: ${this.info.razonsocial.nombre}`, bold: true },
+      { text: `NOMBRE COMERCIAL: ****` },
+      { text: `NOMBRE DEL REPRESENTANTE LEGAL: ****` },
+      { text: `DIRECCIÓN: ${this.info.razonsocial.direccion}` },
+      { text: `NIT: ****` },
+      { text: `REGIMEN DE IMPUESTO SOBRE LA RENTA: ****` },
+      { text: `NÚMERO DE CUENTA BANCARIA MONETARIA: ****` },
+      { text: `TELEFONO: ****` },
+      { text: `CORREO ELECTRÓNICO: ****` },
     ];
   }
 
@@ -316,5 +279,22 @@ export class CreaPdf {
 
   private formatAmount( value ): string {
     return value.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+  }
+
+  private formatDate(date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) {
+      month = '0' + month;
+    }
+
+    if (day.length < 2) {
+      day = '0' + day;
+    }
+
+    return [day, month, year].join('-');
   }
 }

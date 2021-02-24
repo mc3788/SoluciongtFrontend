@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
 import { navItems } from '../../_nav';
 import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
+import {Router, RouterOutlet, ActivationStart} from '@angular/router';
 import {INavData} from '@coreui/angular';
 import {Acceso} from '../../interface/bo/Acceso';
 
@@ -10,11 +10,13 @@ import {Acceso} from '../../interface/bo/Acceso';
   selector: 'app-dashboard',
   templateUrl: './default-layout.component.html'
 })
-export class DefaultLayoutComponent {
+export class DefaultLayoutComponent  implements OnInit{
   minimized = false;
   public navItems: INavData[] = [];
   private items = [...navItems];
   private accesos: Acceso[];
+
+  @ViewChild(RouterOutlet) outlet: RouterOutlet;
 
   constructor( private authService: AuthService,
                private router: Router ) {
@@ -31,6 +33,13 @@ export class DefaultLayoutComponent {
       this.loadMenu();
     }
 
+  }
+
+  ngOnInit() {
+    this.router.events.subscribe(e => {
+      if (e instanceof ActivationStart && e.snapshot.outlet === "administration")
+        this.outlet.deactivate();
+    });
   }
 
 

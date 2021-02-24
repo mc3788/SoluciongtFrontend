@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DataService } from './services/data.service';
+import { CreaPdf } from './utils/crea-pdf';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -44,6 +45,7 @@ import { AppRoutingModule } from './app.routing';
 import {AlertModule} from 'ngx-bootstrap';
 import {AuthService} from './services/auth.service';
 import {AuthGuardService} from './services/auth-guard.service';
+import {NumerosALetras} from './utils/numeros-a-letras';
 
 @NgModule({
   imports: [
@@ -72,7 +74,7 @@ import {AuthGuardService} from './services/auth-guard.service';
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }, DataService, AuthService, AuthGuardService],
+  }, DataService, AuthService, AuthGuardService, CreaPdf, NumerosALetras],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

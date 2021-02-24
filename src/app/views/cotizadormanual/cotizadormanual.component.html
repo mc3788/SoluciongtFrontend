@@ -38,7 +38,8 @@
                 <button (click)="openToModify(items.id)" *ngIf="accesos.cambio==='Y'" class="btn btn-warning text-white"><i class="cil-pencil"></i></button>
                 <button (click)="openToDelete(items.id, items.numero)" *ngIf="accesos.baja==='Y'" class="btn btn-danger text-white"><i class="cil-trash"></i></button>
                 <button (click)="openToVisualy(items.id)" *ngIf="accesos.consulta==='Y'" class="btn btn-info text-white"><i class="cil-find-in-page"></i></button>
-                <button (click)="openToDetail(items.id, items.numero)" *ngIf="accesos.cambio==='Y'" class="btn btn-dark text-white"><i class="cil-description "></i></button> 
+                <button (click)="openToDetail(items.id, items.numero)" *ngIf="accesos.cambio==='Y'" class="btn btn-dark text-white"><i class="cil-description "></i></button>
+                <button (click)="print(items.id, items.numero)" *ngIf="accesos.cambio==='Y'" class="btn btn-dark text-white"><i class="cil-description "></i></button>
               </td>
             </tr>
           </tbody>
@@ -61,8 +62,8 @@ aria-hidden="true">
        <form class="form-horizontal" [formGroup]="modalForm" (ngSubmit)="saveChanges()">
          <div class="modal-body">
           <div class="form-group">
-            <label class="col-form-label" for="clienteInput">Cliente</label>
-            <select id="clienteSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.cliente.errors }" 
+            <label class="col-form-label" for="clienteSelect">Cliente</label>
+            <select id="clienteSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.cliente.errors }"
                     formControlName="cliente" name="clienteSelect" [disableControl]="modalMode===0" required>
               <option *ngFor="let c of clientes" value="{{c.id}}">{{c.nombre}}</option>
             </select>
@@ -79,7 +80,7 @@ aria-hidden="true">
            </div>
            <div class="form-group">
              <label class="col-form-label" for="tipoInput">Tipo</label>
-             <input id="tipoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipo.errors }" 
+             <input id="tipoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipo.errors }"
                 formControlName="tipo" size="16" type="text" [disableControl]="modalMode===0" required>
              <div *ngIf="submitted && f.tipo.errors" class="invalid-feedback">
                <div *ngIf="f.tipo.errors.required">El tipo es requerido</div>
@@ -87,7 +88,7 @@ aria-hidden="true">
            </div>
            <div class="form-group">
              <label class="col-form-label" for="numeroNogInput">Número NOG</label>
-             <input id="numeroNogInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.numeroNog.errors }" 
+             <input id="numeroNogInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.numeroNog.errors }"
                 formControlName="numeroNog" size="16" type="text" [disableControl]="modalMode===0" required>
              <div *ngIf="submitted && f.numeroNog.errors" class="invalid-feedback">
                <div *ngIf="f.numeroNog.errors.required">El Nog es requerido</div>
@@ -95,7 +96,7 @@ aria-hidden="true">
            </div>
            <div class="form-group">
             <label class="col-form-label" for="eventoInput">Evento</label>
-            <input id="eventoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.evento.errors }" 
+            <input id="eventoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.evento.errors }"
                 formControlName="evento" size="16" type="text" [disableControl]="modalMode===0" required>
             <div *ngIf="submitted && f.evento.errors" class="invalid-feedback">
               <div *ngIf="f.evento.errors.required">El evento es requerido</div>
@@ -103,7 +104,7 @@ aria-hidden="true">
           </div>
           <div class="form-group">
             <label class="col-form-label" for="pedidoInput">Pedido</label>
-            <input id="pedidoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.pedido.errors }" 
+            <input id="pedidoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.pedido.errors }"
                 formControlName="pedido" size="16" type="text" [disableControl]="modalMode===0" required>
             <div *ngIf="submitted && f.pedido.errors" class="invalid-feedback">
               <div *ngIf="f.pedido.errors.required">El pedido es requerido</div>
@@ -111,7 +112,7 @@ aria-hidden="true">
           </div>
           <div class="form-group">
             <label class="col-form-label" for="codigoIgssInput">Código IGSS</label>
-            <input id="codigoIgssInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigoIgss.errors }" 
+            <input id="codigoIgssInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigoIgss.errors }"
                 formControlName="codigoIgss" size="16" type="text" [disableControl]="modalMode===0" required>
             <div *ngIf="submitted && f.codigoIgss.errors" class="invalid-feedback">
               <div *ngIf="f.codigoIgss.errors.required">El Código IGSS es requerido</div>
@@ -119,7 +120,7 @@ aria-hidden="true">
           </div>
           <div class="form-group">
             <label class="col-form-label" for="codigoPprInput">Código PPR</label>
-            <input id="codigoPprInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigoPpr.errors }" 
+            <input id="codigoPprInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigoPpr.errors }"
                 formControlName="codigoPpr" size="16" type="text" [disableControl]="modalMode===0" required>
             <div *ngIf="submitted && f.codigoPpr.errors" class="invalid-feedback">
               <div *ngIf="f.codigoPpr.errors.required">El Código PPR es requerido</div>
@@ -127,7 +128,7 @@ aria-hidden="true">
           </div>
           <div class="form-group">
             <label class="col-form-label" for="ofertaInput">Oferta</label>
-            <input id="ofertaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.oferta.errors }" 
+            <input id="ofertaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.oferta.errors }"
                 formControlName="oferta" size="16" type="text" [disableControl]="modalMode===0" required>
             <div *ngIf="submitted && f.oferta.errors" class="invalid-feedback">
               <div *ngIf="f.oferta.errors.required">La oferta es requerida</div>
@@ -135,7 +136,7 @@ aria-hidden="true">
           </div>
           <div class="form-group">
             <label class="col-form-label" for="razonInput">Razón</label>
-            <input id="razonInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.razon.errors }" 
+            <input id="razonInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.razon.errors }"
                 formControlName="razon" size="16" type="text" [disableControl]="modalMode===0" required>
             <div *ngIf="submitted && f.razon.errors" class="invalid-feedback">
               <div *ngIf="f.razon.errors.required">La razón es requerida</div>
@@ -143,7 +144,7 @@ aria-hidden="true">
           </div>
           <div class="form-group">
             <label class="col-form-label" for="tipoInput">Tipo</label>
-            <input id="tipoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipo.errors }" 
+            <input id="tipoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipo.errors }"
                 formControlName="tipo" size="16" type="text" [disableControl]="modalMode===0" required>
             <div *ngIf="submitted && f.tipo.errors" class="invalid-feedback">
               <div *ngIf="f.tipo.errors.required">El tipo es requerido</div>
@@ -183,7 +184,7 @@ aria-hidden="true">
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!--Modal de Detalle-->
+<!--Modal de Detalle.ts-->
 <div bsModal #entityModalDetail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myDetaillLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-primary" role="document">
@@ -197,8 +198,8 @@ aria-hidden="true">
               <form class="form-horizontal" [formGroup]="modalFormDetail" (ngSubmit)="saveChangesDetail()">
                 <div class="modal-body">
                   <div class="form-group">
-                    <label class="col-form-label" for="productoInput">Producto</label>
-                    <select id="productoSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.producto.errors }" 
+                    <label class="col-form-label" for="productoSelect">Producto</label>
+                    <select id="productoSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.producto.errors }"
                             formControlName="producto" name="productoSelect" [disableControl]="modalMode===0" required>
                       <option *ngFor="let p of productos" value="{{p.id}}">{{p.descripcion}}</option>
                     </select>
@@ -241,7 +242,7 @@ aria-hidden="true">
                         <div *ngIf="submitted && fd.tiempoEntrega.errors" class="invalid-feedback">
                           <div *ngIf="fd.tiempoEntrega.errors.required">El tiempoEntrega es requerido</div>
                         </div>
-                  </div>                  
+                  </div>
                   <div class="form-group">
                     <label class="col-form-label" for="requiereInstalacionSelect">Requiere Instalación</label>
                     <div class="controls">

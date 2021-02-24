@@ -11,7 +11,7 @@ import { Cliente } from '../../interface/bo/Cliente';
 import { Letra } from '../../interface/bo/Letra';
 import { Usuario } from '../../interface/bo/Usuario';
 import { Producto } from '../../interface/bo/Producto';
-
+import { CreaPdf } from '../../utils/crea-pdf';
 
 
 @Component({
@@ -57,7 +57,8 @@ export class CotizadormanualComponent implements OnInit {
 
   constructor(private dataService: DataService,
     public formBuilder: FormBuilder,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private creaPdf: CreaPdf) {
       this.dataService.getAllItemsFromEntity('cotizacionEncabezado', this.authService.token)
       .subscribe(res => {
         this.cotizaciones = (<Cotizacion[]>res);
@@ -91,8 +92,8 @@ export class CotizadormanualComponent implements OnInit {
         }, error2 => {
           console.error(JSON.stringify(error2));
         });
-        
-  
+
+
        // Inicializa el form construyendolo con los campos
        this.modalForm = this.formBuilder.group({
         cliente: ['', Validators.required],
@@ -108,7 +109,7 @@ export class CotizadormanualComponent implements OnInit {
         serie: [''],
         tipo: [''],
         idUsuario: ['']
-  
+
       });
 
       // Inicializa el form construyendolo con los campos
@@ -124,8 +125,8 @@ export class CotizadormanualComponent implements OnInit {
         garantia: [''],
         mantenimiento: ['']
       });
-  
-      this.accesos = this.authService.accesos.find( a => a.opcion === 'Manual');  
+
+      this.accesos = this.authService.accesos.find( a => a.opcion === 'Manual');
 
      }
 
@@ -156,12 +157,12 @@ export class CotizadormanualComponent implements OnInit {
       this.submitted = false;
       this.modalMode = 2;
       this.title = 'Modificar';
-  
+
       this.dataService.getEntityDetail('cotizacionEncabezado', this.authService.token, id)
         .subscribe(resp => {
           // se convierten los datos recuperadps al objeto
           this.detail = (<Cotizacion>resp);
-  
+
           // se ingresan los valores en el form y validacionesxw
           this.modalForm = this.formBuilder.group({
             cliente: [this.detail.idCliente, Validators.required],
@@ -175,7 +176,7 @@ export class CotizadormanualComponent implements OnInit {
             razon: [this.detail.idRazonSocial],
             tipo: [this.detail.tipo],
           });
-  
+
           this.entityModal.show();
         }, error2 => {
           console.error(JSON.stringify(error2));
@@ -186,12 +187,12 @@ export class CotizadormanualComponent implements OnInit {
       this.submitted = false;
       this.modalMode = 0;
       this.title = 'Consultar';
-  
+
       this.dataService.getEntityDetail('cotizacionEncabezado', this.authService.token, id)
         .subscribe(resp => {
           // se convierten los datos recuperadps al objeto
           this.detail = (<Cotizacion>resp);
-  
+
           // se ingresan los valores en el form y validaciones
           this.modalForm = this.formBuilder.group({
             cliente: [this.detail.idCliente],
@@ -208,12 +209,12 @@ export class CotizadormanualComponent implements OnInit {
             numeroNog: [this.detail.numeroNOG],
             pedido: [this.detail.pedido]
           });
-  
+
           this.entityModal.show();
         }, error2 => {
           console.error(JSON.stringify(error2));
         });
-  
+
       this.entityModal.show();
     }
 
@@ -239,7 +240,7 @@ export class CotizadormanualComponent implements OnInit {
 
     saveChanges() {
       this.submitted = true;
-  
+
       if (this.modalForm.invalid) {
         return;
       }
@@ -259,7 +260,7 @@ export class CotizadormanualComponent implements OnInit {
         idSerie: this.letra.id,
         idUsuario: this.usuario.id
       };
-  
+
       if (this.modalMode === 1) {
         // Servicio para guardar nueva entidad
         this.dataService.insertNewEntity('cotizacionEncabezado', this.authService.token, dto)
@@ -272,7 +273,7 @@ export class CotizadormanualComponent implements OnInit {
             const timer = setTimeout(() => this.existsError = false, 6000);
             console.error(JSON.stringify(error2));
           });
-  
+
       } else if (this.modalMode === 2) {
         // se insertan los datos modificados con el servicio de edicion
         this.dataService.editEntity('cotizacionEncabezado', this.authService.token, this.detail.id, dto)
@@ -283,11 +284,11 @@ export class CotizadormanualComponent implements OnInit {
             console.error(JSON.stringify(error2));
           });
       }
-  
+
       // Recarga valores y los muestra en pantalla, queda pendiente pagineo
       this.reload();
       this.entityModal.show();
-  
+
     }
 
     reload() {
@@ -302,7 +303,7 @@ export class CotizadormanualComponent implements OnInit {
     openToDetail(id: number, numeroCot: number) {
       this.submitted = false;
       this.modalMode = 1;
-      this.title = 'Agregar Detalle';
+      this.title = 'Agregar Detalle.ts';
       this.modalFormDetail = this.formBuilder.group({
         numeroCotizacion:[numeroCot],
         producto: ['', Validators.required],
@@ -318,9 +319,22 @@ export class CotizadormanualComponent implements OnInit {
       this.entityModalDetail.show();
     }
 
+  print(id: number) {
+
+    this.dataService.getEntityDetail('cotizacionEncabezado', this.authService.token, id)
+      .subscribe(resp => {
+        console.log( <Cotizacion>resp );
+
+        this.creaPdf.createDocument( <Cotizacion> resp );
+
+      }, error2 => {
+        console.error(JSON.stringify(error2));
+      });
+  }
+
     saveChangesDetail() {
       this.submitted = true;
-  
+
       if (this.modalFormDetail.invalid) {
         return;
       }
@@ -337,7 +351,7 @@ export class CotizadormanualComponent implements OnInit {
         garantia : this.modalFormDetail.value.garantia,
         mantenimiento : this.modalFormDetail.value.mantenimiento
       };
-  
+
       if (this.modalMode === 1) {
         // Servicio para guardar nueva entidad
         this.dataService.insertNewEntity('cotizacionDetalle', this.authService.token, dto)
@@ -350,7 +364,7 @@ export class CotizadormanualComponent implements OnInit {
             const timer = setTimeout(() => this.existsError = false, 6000);
             console.error(JSON.stringify(error2));
           });
-  
+
       } else if (this.modalMode === 2) {
         // se insertan los datos modificados con el servicio de edicion
         this.dataService.editEntity('cotizacionDetalle', this.authService.token, this.detail.id, dto)
@@ -361,7 +375,7 @@ export class CotizadormanualComponent implements OnInit {
             console.error(JSON.stringify(error2));
           });
       }
-  
+
       // Recarga valores y los muestra en pantalla, queda pendiente pagineo
       this.reload();
       this.entityModalDetail.show();

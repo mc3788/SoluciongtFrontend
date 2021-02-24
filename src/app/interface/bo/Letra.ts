@@ -3,8 +3,8 @@ export class Letra {
     serie: string;
     idUsuario: number;
     status: string;
-  
-    constructor( 
+
+    constructor(
                  id: number,
                  serie: string,
                  idUsuario: number,
@@ -15,6 +15,5 @@ export class Letra {
       this.idUsuario = idUsuario;
       this.status = status;
     }
-  
+
   }
-  

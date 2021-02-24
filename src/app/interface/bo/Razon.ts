@@ -12,6 +12,5 @@ export class Razon {
           this.nombre = nombre;
           this.direccion = direccion;
       }
-  
+
   }
-  
