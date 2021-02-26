@@ -69,22 +69,29 @@
                 <div class="modal-body">
                     <div class="form-group">
                       <label class="col-form-label" for="nombreInput">Nombre y Apellidos</label>
-
                       <input id="nombreInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" formControlName="nombre" size="16" type="text" [disableControl]="modalMode==0" required>
                       <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback">
                         <div *ngIf="f.nombre.errors.required">El nombre es requerido</div>
                       </div>
-
                     </div>
+
+                    <div class="form-group">
+                      <label class="col-form-label" for="departamentoInput">Departamento</label>
+                      <div class="controls">
+                        <div class="input-prepend input-group">
+                          <input id="departamentoInput" class="form-control" formControlName="departamento"  size="16" type="text" [disableControl]="modalMode==0">
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="form-group">
                       <label class="col-form-label" for="nitInput">Nit</label>
-
                       <input id="nitInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nit.errors }" formControlName="nit" size="16" type="text" [disableControl]="modalMode==0" required>
                       <div *ngIf="submitted && f.nit.errors" class="invalid-feedback">
                         <div *ngIf="f.nit.errors.required">El N.I.T. es requerido</div>
                       </div>
-
                     </div>
+
                     <div class="form-group">
                       <label class="col-form-label" for="direccionInput">Dirección</label>
                       <div class="controls">

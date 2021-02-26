@@ -51,7 +51,14 @@ export class RazonsocialComponent implements OnInit {
      // Inicializa el form construyendolo con los campos
      this.modalForm = this.formBuilder.group({
       nombre: ['', Validators.required],
-      direccion: ['']
+      nombreComercial: ['', Validators.required],
+      direccion: ['', Validators.required],
+      representanteLegal: [''],
+      nit: [''],
+      cuentaBancaria: [''],
+      regimenImpuesto: [''],
+      telefono: ['', Validators.required],
+      correoElectronico: ['', Validators.required],
 
     });
 
@@ -65,7 +72,14 @@ export class RazonsocialComponent implements OnInit {
       this.title = 'Agregar';
       this.modalForm = this.formBuilder.group({
         nombre: [''],
-        direccion: ['']
+        nombreComercial: [''],
+        direccion: [''],
+        representanteLegal: [''],
+        nit: [''],
+        cuentaBancaria: [''],
+        regimenImpuesto: [''],
+        telefono: [''],
+        correoElectronico: [''],
       });
       this.entityModal.show();
     }
@@ -82,7 +96,14 @@ export class RazonsocialComponent implements OnInit {
           // se ingresan los valores en el form y validaciones
           this.modalForm = this.formBuilder.group({
             nombre: [this.detail.nombre],
-            direccion: [this.detail.direccion]
+            direccion: [this.detail.direccion],
+            nombreComercial: [this.detail.nombreComercial],
+            representanteLegal: [this.detail.representanteLegal],
+            nit: [this.detail.nit],
+            cuentaBancaria: [this.detail.cuentaBancaria],
+            regimenImpuesto: [this.detail.regimenImpuesto],
+            telefono: [this.detail.telefono],
+            correoElectronico: [this.detail.correoElectronico],
           });
   
           this.entityModal.show();
@@ -106,7 +127,14 @@ export class RazonsocialComponent implements OnInit {
           // se ingresan los valores en el form y validaciones
           this.modalForm = this.formBuilder.group({
             nombre: [this.detail.nombre],
-            direccion: [this.detail.direccion]
+            direccion: [this.detail.direccion],
+            nombreComercial: [this.detail.nombreComercial],
+            representanteLegal: [this.detail.representanteLegal],
+            nit: [this.detail.nit],
+            cuentaBancaria: [this.detail.cuentaBancaria],
+            regimenImpuesto: [this.detail.regimenImpuesto],
+            telefono: [this.detail.telefono],
+            correoElectronico: [this.detail.correoElectronico],
           });
   
           this.entityModal.show();
@@ -141,11 +169,15 @@ export class RazonsocialComponent implements OnInit {
       }
   
       const dto: RazonDTO = {
-        nit: this.modalForm.value.nit,
         nombre: this.modalForm.value.nombre,
+        nombreComercial: this.modalForm.value.nombreComercial,
+        representanteLegal: this.modalForm.value.representanteLegal,
+        nit: this.modalForm.value.nit,
+        cuentaBancaria: this.modalForm.value.cuentaBancaria,
+        regimenImpuesto: this.modalForm.value.regimenImpuesto,
         telefono: this.modalForm.value.telefono,
         direccion: this.modalForm.value.direccion,
-        observaciones: this.modalForm.value.observaciones
+        correoElectronico: this.modalForm.value.correoElectronico
       };
   
       if (this.modalMode === 1) {

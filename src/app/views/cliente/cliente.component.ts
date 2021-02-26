@@ -55,7 +55,8 @@ export class ClienteComponent implements OnInit {
       nombre: ['', Validators.required],
       telefono: [''],
       direccion: [''],
-      observaciones: ['']
+      observaciones: [''],
+      departamento: ['']
 
     });
 
@@ -74,7 +75,8 @@ export class ClienteComponent implements OnInit {
       nombre: [''],
       telefono: [''],
       direccion: [''],
-      observaciones: ['']
+      observaciones: [''],
+      departamento: ['']
     });
     this.entityModal.show();
   }
@@ -94,7 +96,8 @@ export class ClienteComponent implements OnInit {
           nombre: [this.detail.nombre],
           telefono: [this.detail.telefono],
           direccion: [this.detail.direccion],
-          observaciones: [this.detail.observaciones]
+          observaciones: [this.detail.observaciones],
+          departamento: [this.detail.departamento]
         });
 
         this.entityModal.show();
@@ -120,7 +123,8 @@ export class ClienteComponent implements OnInit {
           nombre: [this.detail.nombre],
           telefono: [this.detail.telefono],
           direccion: [this.detail.direccion],
-          observaciones: [this.detail.observaciones]
+          observaciones: [this.detail.observaciones],
+          departamento: [this.detail.departamento]
         });
 
         this.entityModal.show();
@@ -162,7 +166,8 @@ export class ClienteComponent implements OnInit {
       nombre: this.modalForm.value.nombre,
       telefono: this.modalForm.value.telefono,
       direccion: this.modalForm.value.direccion,
-      observaciones: this.modalForm.value.observaciones
+      observaciones: this.modalForm.value.observaciones,
+      departamento: this.modalForm.value.departamento
     };
 
     if (this.modalMode === 1) {

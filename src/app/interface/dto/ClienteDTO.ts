@@ -4,7 +4,8 @@ export class ClienteDTO {
         nombre : string,
         telefono : string,
         direccion : string,
-        observaciones : string ) {
+        observaciones : string,
+        departamento : string ) {
     }
   }
   
