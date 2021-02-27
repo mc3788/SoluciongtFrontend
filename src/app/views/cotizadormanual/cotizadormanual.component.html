@@ -31,7 +31,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let items of cotizaciones | filter: 'serie' : searchText">
+        <tr *ngFor="let items of cotizaciones | filter: 'cliente.nombre' : searchText">
           <td>{{items.numero}}</td>
           <td>{{items.cliente.nombre}}</td>
           <td>{{items.serie.serie}}</td>
@@ -46,7 +46,7 @@
               class="cil-find-in-page"></i></button>
             <button (click)="openToDetail(items.id)" *ngIf="accesos.cambio==='Y'"
                     class="btn btn-dark text-white"><i class="cil-description "></i></button>
-            <button (click)="print( items.id )" *ngIf="accesos.cambio==='Y'" class="btn btn-success text-white"><i
+            <button (click)="print( items )" *ngIf="accesos.cambio==='Y'" class="btn btn-success text-white"><i
               class="cil-print "></i></button>
           </td>
         </tr>
@@ -76,8 +76,8 @@
             <div class="col-12">
               <div class="form-group row">
                 <div class="col-md-12">
+                  <label class="col-form-label" for="clienteInput">Cliente</label>
                   <div class="input-group">
-                    <!--                <label class="col-form-label" for="clienteInput">Cliente</label>-->
                     <input type="hidden" name="idCliente" id="idCliente" formControlName="idCliente"/>
                     <input placeholder="Seleccione un cliente" id="clienteInput" class="form-control"
                            [ngClass]="{ 'is-invalid': submitted && f.cliente.errors }"
@@ -439,11 +439,32 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div bsModal #warningModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-md modal-warning" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{titleWarning}}</h4>
+        <button type="button" class="close" (click)="warningModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{messageWarning}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="warningModal.hide()">Aceptar
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 <div bsModal #clienteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="myDetaillLabel"
      aria-hidden="true">
-  <div class="modal-dialog " role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Clientes</h4>

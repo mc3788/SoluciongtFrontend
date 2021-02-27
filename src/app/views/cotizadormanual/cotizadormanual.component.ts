@@ -69,11 +69,15 @@ export class CotizadormanualComponent implements OnInit {
   selId: number;
   selName: string;
 
+  titleWarning: string;
+  messageWarning: string;
+
   @ViewChild('entityModal') public entityModal: ModalDirective;
   @ViewChild('entityModalDetail') public entityModalDetail: ModalDirective;
   @ViewChild('deleteModal') public deleteModal: ModalDirective;
   @ViewChild('clienteModal') public clientModal: ModalDirective;
   @ViewChild('productoModal') public productModal: ModalDirective;
+  @ViewChild('warningModal') public warningModal: ModalDirective;
 
 
   constructor(private dataService: DataService,
@@ -318,6 +322,12 @@ export class CotizadormanualComponent implements OnInit {
     this.deleteModal.show();
   }
 
+  openWarning( message: string, title: string ) {
+    this.titleWarning = title;
+    this.messageWarning = message;
+    this.warningModal.show();
+  }
+
   dismiss() {
     this.entityModal.hide();
   }
@@ -462,17 +472,29 @@ export class CotizadormanualComponent implements OnInit {
     this.showDetailData = true;
   }
 
-  print(id: number) {
+  print( c: Cotizacion ) {
 
-    this.dataService.getEntityDetail('cotizacionEncabezado', this.authService.token, id)
-      .subscribe(resp => {
-        console.log(<Cotizacion>resp);
+    if ( c.detalle && c.detalle.length > 0 ) {
+      this.creaPdf.createDocument( c );
+    } else {
+      this.openWarning('No se existe detalle para esta cotización. Por favor ingresar el detalle.',
+              'No se encontró detalle' );
+    }
 
-        this.creaPdf.createDocument(<Cotizacion>resp);
-
-      }, error2 => {
-        console.error(JSON.stringify(error2));
-      });
+    // this.dataService.getEntityDetail('cotizacionEncabezado', this.authService.token, id)
+    //   .subscribe(resp => {
+    //     const c: Cotizacion = <Cotizacion>resp;
+    //
+    //     if ( c.detalle && c.detalle.length > 0 ) {
+    //       this.creaPdf.createDocument( c );
+    //     } else {
+    //       this.openWarning('No se existe detalle para esta cotización. Por favor ingresar el detalle.',
+    //         'No se encontró detalle' );
+    //     }
+    //
+    //   }, error2 => {
+    //     console.error(JSON.stringify(error2));
+    //   });
   }
 
   saveChangesDetail() {
