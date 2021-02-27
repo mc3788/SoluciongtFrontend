@@ -51,7 +51,14 @@ export class RazonsocialComponent implements OnInit {
     // Inicializa el form construyendolo con los campos
     this.modalForm = this.formBuilder.group({
       nombre: ['', Validators.required],
-      direccion: ['']
+      nombreComercial: ['', Validators.required],
+      direccion: ['', Validators.required],
+      representanteLegal: [''],
+      nit: [''],
+      cuentaBancaria: [''],
+      regimenImpuesto: [''],
+      telefono: ['', Validators.required],
+      correoElectronico: ['', Validators.required],
 
     });
 
@@ -64,138 +71,162 @@ export class RazonsocialComponent implements OnInit {
     return this.modalForm.controls;
   }
 
-  openToAdd() {
-    this.submitted = false;
-    this.modalMode = 1;
-    this.title = 'Agregar';
-    this.modalForm = this.formBuilder.group({
-      nombre: [''],
-      direccion: ['']
-    });
-    this.entityModal.show();
-  }
-
-  openToVisualy(id: number) {
-    this.submitted = false;
-    this.modalMode = 0;
-    this.title = 'Consultar';
-
-    this.dataService.getEntityDetail('razonsocial', this.authService.token, id)
-      .subscribe(resp => {
-        // se convierten los datos recuperadps al objeto
-        this.detail = (<Razon>resp);
-
-        // se ingresan los valores en el form y validaciones
-        this.modalForm = this.formBuilder.group({
-          nombre: [this.detail.nombre],
-          direccion: [this.detail.direccion]
-        });
-
-        this.entityModal.show();
-      }, error2 => {
-        console.error(JSON.stringify(error2));
+    openToAdd() {
+      this.submitted = false;
+      this.modalMode = 1;
+      this.title = 'Agregar';
+      this.modalForm = this.formBuilder.group({
+        nombre: [''],
+        nombreComercial: [''],
+        direccion: [''],
+        representanteLegal: [''],
+        nit: [''],
+        cuentaBancaria: [''],
+        regimenImpuesto: [''],
+        telefono: [''],
+        correoElectronico: [''],
       });
-
-    this.entityModal.show();
-  }
-
-  openToModify(id: number) {
-    this.submitted = false;
-    this.modalMode = 2;
-    this.title = 'Modificar';
-
-    this.dataService.getEntityDetail('razonsocial', this.authService.token, id)
-      .subscribe(resp => {
-        // se convierten los datos recuperadps al objeto
-        this.detail = (<Razon>resp);
-
-        // se ingresan los valores en el form y validaciones
-        this.modalForm = this.formBuilder.group({
-          nombre: [this.detail.nombre],
-          direccion: [this.detail.direccion]
-        });
-
-        this.entityModal.show();
-      }, error2 => {
-        console.error(JSON.stringify(error2));
-      });
-  }
-
-  openToDelete(id: number, name: string) {
-    this.submitted = false;
-    this.selId = id;
-    this.selName = name;
-    this.title = 'Eliminar';
-    this.deleteModal.show();
-  }
-
-  deleteReg() {
-    this.dataService.deleteEntity('razonsocial', this.authService.token, this.selId)
-      .subscribe(resp => {
-        this.reload();
-        this.deleteModal.hide();
-      }, error2 => {
-        console.error(JSON.stringify(error2));
-      });
-  }
-
-  saveChanges() {
-    this.submitted = true;
-
-    if (this.modalForm.invalid) {
-      return;
+      this.entityModal.show();
     }
+    openToVisualy(id: number) {
+      this.submitted = false;
+      this.modalMode = 0;
+      this.title = 'Consultar';
 
-    const dto: RazonDTO = {
-      nit: this.modalForm.value.nit,
-      nombre: this.modalForm.value.nombre,
-      telefono: this.modalForm.value.telefono,
-      direccion: this.modalForm.value.direccion,
-      observaciones: this.modalForm.value.observaciones
-    };
-
-    if (this.modalMode === 1) {
-      // Servicio para guardar nueva entidad
-      this.dataService.insertNewEntity('razonsocial', this.authService.token, dto)
+      this.dataService.getEntityDetail('razonsocial', this.authService.token, id)
         .subscribe(resp => {
-          this.reload();
-          this.entityModal.hide();
+          // se convierten los datos recuperadps al objeto
+          this.detail = (<Razon>resp);
+
+          // se ingresan los valores en el form y validaciones
+          this.modalForm = this.formBuilder.group({
+            nombre: [this.detail.nombre],
+            direccion: [this.detail.direccion],
+            nombreComercial: [this.detail.nombreComercial],
+            representanteLegal: [this.detail.representanteLegal],
+            nit: [this.detail.nit],
+            cuentaBancaria: [this.detail.cuentaBancaria],
+            regimenImpuesto: [this.detail.regimenImpuesto],
+            telefono: [this.detail.telefono],
+            correoElectronico: [this.detail.correoElectronico],
+          });
+
+          this.entityModal.show();
         }, error2 => {
-          this.existsError = true;
-          this.existsErrorTitle = 'Error al grabar registro.';
-          const timer = setTimeout(() => this.existsError = false, 6000);
           console.error(JSON.stringify(error2));
         });
 
-    } else if (this.modalMode === 2) {
-      // se insertan los datos modificados con el servicio de edicion
-      this.dataService.editEntity('razonsocial', this.authService.token, this.detail.id, dto)
+      this.entityModal.show();
+    }
+
+    openToModify(id: number) {
+      this.submitted = false;
+      this.modalMode = 2;
+      this.title = 'Modificar';
+
+      this.dataService.getEntityDetail('razonsocial', this.authService.token, id)
         .subscribe(resp => {
-          this.reload();
-          this.entityModal.hide();
+          // se convierten los datos recuperadps al objeto
+          this.detail = (<Razon>resp);
+
+          // se ingresan los valores en el form y validaciones
+          this.modalForm = this.formBuilder.group({
+            nombre: [this.detail.nombre],
+            direccion: [this.detail.direccion],
+            nombreComercial: [this.detail.nombreComercial],
+            representanteLegal: [this.detail.representanteLegal],
+            nit: [this.detail.nit],
+            cuentaBancaria: [this.detail.cuentaBancaria],
+            regimenImpuesto: [this.detail.regimenImpuesto],
+            telefono: [this.detail.telefono],
+            correoElectronico: [this.detail.correoElectronico],
+          });
+
+          this.entityModal.show();
         }, error2 => {
           console.error(JSON.stringify(error2));
         });
     }
 
-    // Recarga valores y los muestra en pantalla, queda pendiente pagineo
-    this.reload();
-    this.entityModal.show();
+    openToDelete(id: number, name: string) {
+      this.submitted = false;
+      this.selId = id;
+      this.selName = name;
+      this.title = 'Eliminar';
+      this.deleteModal.show();
+    }
 
-  }
+    deleteReg( ) {
+      this.dataService.deleteEntity('razonsocial', this.authService.token, this.selId)
+        .subscribe(resp => {
+          this.reload();
+          this.deleteModal.hide();
+        }, error2 => {
+          console.error(JSON.stringify(error2));
+        });
+    }
 
-  reload() {
-    this.dataService.getAllItemsFromEntity('razonsocial', this.authService.token)
-      .subscribe(resp => {
-        this.razones = (<Razon[]>resp);
-      }, error => {
-        console.error(JSON.stringify(error));
-      });
-  }
+    saveChanges() {
+      this.submitted = true;
 
-  dismiss() {
-    this.entityModal.hide();
-  }
+      if (this.modalForm.invalid) {
+        return;
+      }
+
+      const dto: RazonDTO = {
+        nombre: this.modalForm.value.nombre,
+        nombreComercial: this.modalForm.value.nombreComercial,
+        representanteLegal: this.modalForm.value.representanteLegal,
+        nit: this.modalForm.value.nit,
+        cuentaBancaria: this.modalForm.value.cuentaBancaria,
+        regimenImpuesto: this.modalForm.value.regimenImpuesto,
+        telefono: this.modalForm.value.telefono,
+        direccion: this.modalForm.value.direccion,
+        correoElectronico: this.modalForm.value.correoElectronico
+      };
+
+      if (this.modalMode === 1) {
+        // Servicio para guardar nueva entidad
+        this.dataService.insertNewEntity('razonsocial', this.authService.token, dto)
+          .subscribe(resp => {
+            this.reload();
+            this.entityModal.hide();
+          }, error2 => {
+            this.existsError = true;
+            this.existsErrorTitle = 'Error al grabar registro.';
+            const timer = setTimeout(() => this.existsError = false, 6000);
+            console.error(JSON.stringify(error2));
+          });
+
+      } else if (this.modalMode === 2) {
+        // se insertan los datos modificados con el servicio de edicion
+        this.dataService.editEntity('razonsocial', this.authService.token, this.detail.id, dto)
+          .subscribe(resp => {
+            this.reload();
+            this.entityModal.hide();
+          }, error2 => {
+            console.error(JSON.stringify(error2));
+          });
+      }
+
+      // Recarga valores y los muestra en pantalla, queda pendiente pagineo
+      this.reload();
+      this.entityModal.show();
+
+    }
+
+    reload() {
+      this.dataService.getAllItemsFromEntity( 'razonsocial', this.authService.token)
+        .subscribe(resp => {
+          this.razones = (<Razon[]> resp);
+        }, error => {
+          console.error( JSON.stringify(error) );
+        });
+    }
+
+    dismiss() {
+        this.entityModal.hide();
+    }
 
   ngOnInit() {
   }
