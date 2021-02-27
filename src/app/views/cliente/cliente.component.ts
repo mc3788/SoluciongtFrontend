@@ -59,7 +59,9 @@ export class ClienteComponent implements OnInit {
 
     });
 
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Clientes');
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Clientes');
+    });
 
   }
 

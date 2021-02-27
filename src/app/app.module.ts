@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import {LocationStrategy, HashLocationStrategy, DatePipe} from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -69,12 +69,12 @@ import {NumerosALetras} from './utils/numeros-a-letras';
   declarations: [
     AppComponent,
     ...APP_CONTAINERS,
-    LoginComponent,
+    LoginComponent
   ],
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }, DataService, AuthService, AuthGuardService, CreaPdf, NumerosALetras],
+  }, DataService, AuthService, AuthGuardService, CreaPdf, NumerosALetras, DatePipe],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

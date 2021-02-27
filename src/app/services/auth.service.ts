@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Usuario} from '../interface/bo/Usuario';
 import {environment} from '../../environments/environment';
 import {Acceso} from '../interface/bo/Acceso';
+import {Observable} from 'rxjs';
 
 const backendUrl = environment.backendAuth;
 
@@ -12,10 +12,10 @@ export class AuthService {
   token: string;
   userId: string;
   AuthSecurity: boolean;
-  user: Usuario;
   logged = false;
-  
-  public accesos: Acceso[];
+  id: string;
+
+  private accesos: Acceso[] = null;
 
   constructor(public http: HttpClient) {
   }
@@ -28,35 +28,67 @@ export class AuthService {
   }
 
   // Carga accesos por nombre de usuario
-  loadAccess( ) {
+  getAccess( ): Promise<Acceso[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'X-Auth-Token': this.token
     });
-    return new Promise<void>( (resolve, reject) => {
+
+    return new Promise<Acceso[]>( async(resolve, reject) => {
       try {
-        this.http.get( backendUrl + 'usuario/permissions/' + this.userId, {headers: headers})
-          .subscribe( data => {
-            this.accesos = <Acceso[]>data;
-            resolve();
-          }, error => {
-            reject();
-          } );
+        if ( !this.accesos ) {
+          await this.http.get(backendUrl + 'usuario/permissions/' + this.userId, {headers: headers})
+            .subscribe(data => {
+              this.accesos = <Acceso[]>data;
+              resolve(this.accesos);
+            }, error => {
+              reject();
+            });
+        } else {
+          resolve(this.accesos);
+        }
       } catch (e) {
         reject();
       }
     });
   }
 
+  // getAccess( ): Observable<Acceso[]> {
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'X-Auth-Token': this.token
+  //   });
+  //
+  //   return new Observable( (observer) => {
+  //     try {
+  //       if ( !this.accesos ) {
+  //         this.http.get(backendUrl + 'usuario/permissions/' + this.userId, {headers: headers})
+  //           .subscribe(data => {
+  //             this.accesos = <Acceso[]>data;
+  //             observer.next(this.accesos);
+  //           }, error => {
+  //             observer.error(error);
+  //           });
+  //       } else {
+  //         observer.next(this.accesos);
+  //       }
+  //     } catch (e) {
+  //       observer.error( e );
+  //     }
+  //   });
+  // }
+
   saveSession() {
     return new Promise<void>((resolve, reject) => {
       if (this.token) {
         localStorage.setItem('token', this.token);
         localStorage.setItem('user', this.userId);
+        localStorage.setItem('id', this.id);
         this.logged = true;
       } else {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('id');
         this.logged = false;
       }
       resolve();
@@ -76,6 +108,7 @@ export class AuthService {
     return new Promise<void>((resolve, reject) => {
         this.token = localStorage.getItem('token');
         this.userId = localStorage.getItem('user');
+        this.id = localStorage.getItem('id');
         resolve();
     });
   }

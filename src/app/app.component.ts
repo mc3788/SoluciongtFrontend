@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
     this.authService.loadSession().then( () => {
       if ( this.authService.token && this.authService.token !== '' ) {
         this.authService.logged = true;
-        this.authService.loadAccess().then( () => {
+        this.authService.getAccess().then( () => {
           router.navigate(['/dashboard']);
         }).catch( () => {
           this.authService.logged = false;

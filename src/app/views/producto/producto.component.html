@@ -74,6 +74,13 @@
                         </div>
                       </div>
                       <div class="form-group">
+                        <label class="col-form-label" for="marcaInput">Marca</label>
+                        <input id="marcaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.marca.errors }" formControlName="marca" size="16" type="text" [disableControl]="modalMode===0" required>
+                        <div *ngIf="submitted && f.marca.errors" class="invalid-feedback">
+                          <div *ngIf="f.marca.errors.required">La marca es requerida</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
                         <label class="col-form-label" for="precioCostoInput">Precio Costo</label>
 
                             <input id="precioCostoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }"  formControlName="precioCosto" size="16" type="number" [disableControl]="modalMode===0" required>

@@ -21,24 +21,20 @@ export class DefaultLayoutComponent  implements OnInit{
   constructor( private authService: AuthService,
                private router: Router ) {
 
-    if ( !this.authService.accesos ) {
-      this.authService.loadAccess().then( () => {
-        this.accesos = this.authService.accesos;
-        this.loadMenu();
-      }).catch( () => {
-        console.error( 'Error getting access.' );
-      });
-    } else {
-      this.accesos = this.authService.accesos;
-      this.loadMenu();
-    }
-
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.router.events.subscribe(e => {
-      if (e instanceof ActivationStart && e.snapshot.outlet === "administration")
+      if (e instanceof ActivationStart && e.snapshot.outlet === 'administration') {
         this.outlet.deactivate();
+      }
+    });
+
+    await this.authService.getAccess().then( ( access) => {
+      this.accesos = access;
+      this.loadMenu();
+    }).catch( ( error ) => {
+      console.error( 'Error getting access.', error );
     });
   }
 
@@ -46,7 +42,7 @@ export class DefaultLayoutComponent  implements OnInit{
   loadMenu( ) {
     this.navItems = this.items.filter( m => {
       if ( m.children ) {
-        m.children = m.children.filter(( c => this.authService.accesos.find( a => c.name === a.opcion) ) );
+        m.children = m.children.filter(( c => this.accesos.find( a => c.name === a.opcion) ) );
         return m.children.length > 0;
       } else {
             return this.accesos.find( a => m.name === a.opcion );

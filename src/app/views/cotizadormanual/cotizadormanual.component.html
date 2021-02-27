@@ -1,163 +1,405 @@
-<div class="col-lg-12">
-    <div class="card">
-      <div class="card-header">
-        <div class="col-sm-6">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="cil-search"></i></span>
-                </div>
-                <div class="search-hero">
-                  <input class="form-control" type="search" [(ngModel)]="searchText" placeholder="Buscar" autocomplete="off" size="35" >
-                </div>
-                <div>
-                  <button type="button" class="btn btn-primary float-right" *ngIf="accesos.alta==='Y'" (click)="openToAdd()">+Nuevo</button>
-                </div>
-            </div>
+<div *ngIf="isReady" class="col-lg-12">
+  <div class="card">
+    <div class="card-header">
+      <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="cil-search"></i></span>
+          </div>
+          <div class="search-hero">
+            <input class="form-control" type="search" [(ngModel)]="searchText" placeholder="Buscar" autocomplete="off"
+                   size="35">
+          </div>
+          <div>
+            <button type="button" class="btn btn-primary float-right" *ngIf="accesos.alta==='Y'" (click)="openToAdd()">
+              +Nuevo
+            </button>
+          </div>
         </div>
       </div>
-      <div class="card-body">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Numero</th>
-              <th>Cliente</th>
-              <th>Serie</th>
-              <th>Usuario</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let items of cotizaciones | filter: 'serie' : searchText">
-              <td>{{items.numero}}</td>
-              <td>{{items.cliente.nombre}}</td>
-              <td>{{items.serie.serie}}</td>
-              <td>{{items.usuario.usuario}}</td>
-              <td>{{items.fecha}}</td>
-              <td>
-                <button (click)="openToModify(items.id)" *ngIf="accesos.cambio==='Y'" class="btn btn-warning text-white"><i class="cil-pencil"></i></button>
-                <button (click)="openToDelete(items.id, items.numero)" *ngIf="accesos.baja==='Y'" class="btn btn-danger text-white"><i class="cil-trash"></i></button>
-                <button (click)="openToVisualy(items.id)" *ngIf="accesos.consulta==='Y'" class="btn btn-info text-white"><i class="cil-find-in-page"></i></button>
-                <button (click)="openToDetail(items.id, items.numero)" *ngIf="accesos.cambio==='Y'" class="btn btn-dark text-white"><i class="cil-description "></i></button>
-                <button (click)="print(items.id, items.numero)" *ngIf="accesos.cambio==='Y'" class="btn btn-dark text-white"><i class="cil-description "></i></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Cliente</th>
+          <th>Serie</th>
+          <th>Usuario</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let items of cotizaciones | filter: 'serie' : searchText">
+          <td>{{items.numero}}</td>
+          <td>{{items.cliente.nombre}}</td>
+          <td>{{items.serie.serie}}</td>
+          <td>{{items.usuario.usuario}}</td>
+          <td>{{items.fecha | date: 'dd-MM-yyyy'}}</td>
+          <td>
+            <button (click)="openToModify(items.id)" *ngIf="accesos.cambio==='Y'" class="btn btn-warning text-white"><i
+              class="cil-pencil"></i></button>
+            <button (click)="openToDelete(items.id, items.numero, 1)" *ngIf="accesos.baja==='Y'"
+                    class="btn btn-danger text-white"><i class="cil-trash"></i></button>
+            <button (click)="openToVisualy(items.id)" *ngIf="accesos.consulta==='Y'" class="btn btn-info text-white"><i
+              class="cil-find-in-page"></i></button>
+            <button (click)="openToDetail(items.id)" *ngIf="accesos.cambio==='Y'"
+                    class="btn btn-dark text-white"><i class="cil-description "></i></button>
+            <button (click)="print( items.id )" *ngIf="accesos.cambio==='Y'" class="btn btn-success text-white"><i
+              class="cil-print "></i></button>
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
     </div>
   </div>
+</div>
 
 <!--Modal de Alta/Cambios/Visualización-->
 <div bsModal #entityModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-aria-hidden="true">
-<div class="modal-dialog modal-primary" role="document">
-   <div class="modal-content">
-       <div class="modal-header">
-           <h4 class="modal-title">{{title}}</h4>
-           <button type="button" class="close" (click)="entityModal.hide()" aria-label="Close">
-           <span aria-hidden="true">&times;</span>
-           </button>
-       </div>
-       <form class="form-horizontal" [formGroup]="modalForm" (ngSubmit)="saveChanges()">
-         <div class="modal-body">
-          <div class="form-group">
-            <label class="col-form-label" for="clienteSelect">Cliente</label>
-            <select id="clienteSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.cliente.errors }"
-                    formControlName="cliente" name="clienteSelect" [disableControl]="modalMode===0" required>
-              <option *ngFor="let c of clientes" value="{{c.id}}">{{c.nombre}}</option>
-            </select>
-            <div *ngIf="submitted && f.cliente.errors" class="invalid-feedback">
-              <div *ngIf="f.cliente.errors.required">El cliente es requerido</div>
+     aria-hidden="true">
+<!--<ng-template #entityModal>-->
+  <div class="modal-dialog modal-lg modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="entityModal.hide()" aria-label="CloseClient">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <div class="modal-body">
+      <form class="form-horizontal" [formGroup]="modalForm" (ngSubmit)="saveChanges( )">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <div class="input-group">
+                    <!--                <label class="col-form-label" for="clienteInput">Cliente</label>-->
+                    <input type="hidden" name="idCliente" id="idCliente" formControlName="idCliente"/>
+                    <input placeholder="Seleccione un cliente" id="clienteInput" class="form-control"
+                           [ngClass]="{ 'is-invalid': submitted && f.cliente.errors }"
+                           formControlName="cliente" type="text" [disableControl]="true" required>
+
+                    <span *ngIf="modalMode!==0" class="input-group-append">
+                    <button (click)="clientList( $event )" class="btn btn-info text-white"><i class="cil-menu"></i></button>
+                  </span>
+                    <div *ngIf="submitted && f.cliente.errors" class="invalid-feedback">
+                      <div *ngIf="f.cliente.errors.required">El cliente es requerido</div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-           <div class="form-group">
-             <label class="col-form-label" for="fechaInput">Fecha</label>
-             <input type="date" id="fechaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }" formControlName="fecha" size="16" [disableControl]="modalMode===0" required>
-             <div *ngIf="submitted && f.fecha.errors" class="invalid-feedback">
-               <div *ngIf="f.fecha.errors.required">La fecha es requerida</div>
-             </div>
-           </div>
-           <div class="form-group">
-             <label class="col-form-label" for="tipoInput">Tipo</label>
-             <input id="tipoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipo.errors }"
-                formControlName="tipo" size="16" type="text" [disableControl]="modalMode===0" required>
-             <div *ngIf="submitted && f.tipo.errors" class="invalid-feedback">
-               <div *ngIf="f.tipo.errors.required">El tipo es requerido</div>
-             </div>
-           </div>
-           <div class="form-group">
-             <label class="col-form-label" for="numeroNogInput">Número NOG</label>
-             <input id="numeroNogInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.numeroNog.errors }"
-                formControlName="numeroNog" size="16" type="text" [disableControl]="modalMode===0" required>
-             <div *ngIf="submitted && f.numeroNog.errors" class="invalid-feedback">
-               <div *ngIf="f.numeroNog.errors.required">El Nog es requerido</div>
-             </div>
-           </div>
-           <div class="form-group">
-            <label class="col-form-label" for="eventoInput">Evento</label>
-            <input id="eventoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.evento.errors }"
-                formControlName="evento" size="16" type="text" [disableControl]="modalMode===0" required>
-            <div *ngIf="submitted && f.evento.errors" class="invalid-feedback">
-              <div *ngIf="f.evento.errors.required">El evento es requerido</div>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <label class="col-form-label" for="fechaInput">Fecha</label>
+                <input type="date" id="fechaInput"
+                       class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }"
+                       formControlName="fecha" size="16" [disableControl]="modalMode===0"
+                       placeholder="dd/mm/yyyy"
+                       min="1997/01/01" max="2100/12/31"
+                       required>
+                <div *ngIf="submitted && f.fecha.errors" class="invalid-feedback">
+                  <div *ngIf="f.fecha.errors.required">La fecha es requerida</div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label class="col-form-label" for="serieSelect">Serie</label>
+                <select id="serieSelect" class="form-control"
+                        formControlName="serie" name="serieSelect" [disableControl]="modalMode!=1">
+                  <option *ngFor="let c of series" value="{{c.id}}">{{c.serie}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label class="col-form-label" for="numero" [hidden]="modalMode===1">Número</label>
+                <input id="numero" class="form-control"
+                       formControlName="numero" size="16" type="text" [hidden]="modalMode===1" [disableControl]="true">
+              </div>
+            </div>
+            <div class="col-3"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="col-form-label" for="numeroNogInput">Número NOG</label>
+                <input id="numeroNogInput" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.numeroNog.errors }"
+                       formControlName="numeroNog" size="16" type="text" [disableControl]="modalMode===0" required>
+                <div *ngIf="submitted && f.numeroNog.errors" class="invalid-feedback">
+                  <div *ngIf="f.numeroNog.errors.required">El Nog es requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label class="col-form-label" for="eventoInput">Evento</label>
+                <input id="eventoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.evento.errors }"
+                       formControlName="evento" size="16" type="text" [disableControl]="modalMode===0" required>
+                <div *ngIf="submitted && f.evento.errors" class="invalid-feedback">
+                  <div *ngIf="f.evento.errors.required">El evento es requerido</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-form-label" for="pedidoInput">Pedido</label>
-            <input id="pedidoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.pedido.errors }"
-                formControlName="pedido" size="16" type="text" [disableControl]="modalMode===0" required>
-            <div *ngIf="submitted && f.pedido.errors" class="invalid-feedback">
-              <div *ngIf="f.pedido.errors.required">El pedido es requerido</div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="col-form-label" for="pedidoInput">Pedido</label>
+                <input id="pedidoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.pedido.errors }"
+                       formControlName="pedido" size="16" type="text" [disableControl]="modalMode===0" required>
+                <div *ngIf="submitted && f.pedido.errors" class="invalid-feedback">
+                  <div *ngIf="f.pedido.errors.required">El pedido es requerido</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label class="col-form-label" for="codigoIgssInput">Código IGSS</label>
+                <input id="codigoIgssInput" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.codigoIgss.errors }"
+                       formControlName="codigoIgss" size="16" type="text" [disableControl]="modalMode===0" required>
+                <div *ngIf="submitted && f.codigoIgss.errors" class="invalid-feedback">
+                  <div *ngIf="f.codigoIgss.errors.required">El Código IGSS es requerido</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-form-label" for="codigoIgssInput">Código IGSS</label>
-            <input id="codigoIgssInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigoIgss.errors }"
-                formControlName="codigoIgss" size="16" type="text" [disableControl]="modalMode===0" required>
-            <div *ngIf="submitted && f.codigoIgss.errors" class="invalid-feedback">
-              <div *ngIf="f.codigoIgss.errors.required">El Código IGSS es requerido</div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="col-form-label" for="codigoPprInput">Código PPR</label>
+                <input id="codigoPprInput" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.codigoPpr.errors }"
+                       formControlName="codigoPpr" size="16" type="text" [disableControl]="modalMode===0" required>
+                <div *ngIf="submitted && f.codigoPpr.errors" class="invalid-feedback">
+                  <div *ngIf="f.codigoPpr.errors.required">El Código PPR es requerido</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label class="col-form-label" for="ofertaInput">Oferta</label>
+                <input id="ofertaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.oferta.errors }"
+                       formControlName="oferta" size="16" type="text" [disableControl]="modalMode===0" required>
+                <div *ngIf="submitted && f.oferta.errors" class="invalid-feedback">
+                  <div *ngIf="f.oferta.errors.required">La oferta es requerida</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label class="col-form-label" for="razonSelect">Razón social</label>
+                <select id="razonSelect" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.razon.errors }"
+                        formControlName="razon" name="razonSelect" [disableControl]="modalMode===0" required>
+                  <option *ngFor="let c of razones" value="{{c.id}}">{{c.nombre}}</option>
+                </select>
+                <div *ngIf="submitted && f.razon.errors" class="invalid-feedback">
+                  <div *ngIf="f.razon.errors.required">La razón social es requerida</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-form-label" for="codigoPprInput">Código PPR</label>
-            <input id="codigoPprInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codigoPpr.errors }"
-                formControlName="codigoPpr" size="16" type="text" [disableControl]="modalMode===0" required>
-            <div *ngIf="submitted && f.codigoPpr.errors" class="invalid-feedback">
-              <div *ngIf="f.codigoPpr.errors.required">El Código PPR es requerido</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-form-label" for="ofertaInput">Oferta</label>
-            <input id="ofertaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.oferta.errors }"
-                formControlName="oferta" size="16" type="text" [disableControl]="modalMode===0" required>
-            <div *ngIf="submitted && f.oferta.errors" class="invalid-feedback">
-              <div *ngIf="f.oferta.errors.required">La oferta es requerida</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-form-label" for="razonInput">Razón</label>
-            <input id="razonInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.razon.errors }"
-                formControlName="razon" size="16" type="text" [disableControl]="modalMode===0" required>
-            <div *ngIf="submitted && f.razon.errors" class="invalid-feedback">
-              <div *ngIf="f.razon.errors.required">La razón es requerida</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-form-label" for="tipoInput">Tipo</label>
-            <input id="tipoInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tipo.errors }"
-                formControlName="tipo" size="16" type="text" [disableControl]="modalMode===0" required>
-            <div *ngIf="submitted && f.tipo.errors" class="invalid-feedback">
-              <div *ngIf="f.tipo.errors.required">El tipo es requerido</div>
-            </div>
-          </div>
-         </div>
-         <div class="modal-footer">
-           <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
-           <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
-         </div>
-       </form>
-   </div>
+
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
+        </div>
+
+    </div>
+  </div>
 </div>
+<!--</ng-template>-->
+
+<!--Modal de Detalle.ts-->
+<div bsModal #entityModalDetail="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myDetaillLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="entityModalDetail.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="(!detalles || detalles.length<=0)|| showDetailData">
+        <form class="form-horizontal" [formGroup]="modalFormDetail" (ngSubmit)="saveChangesDetail()">
+          <div class="modal-body">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-6">
+
+                  <label class="col-form-label" for="productInput">Producto</label>
+                  <div class="input-group">
+
+                    <input placeholder="Seleccione un producto" id="productInput" class="form-control"
+                           [ngClass]="{ 'is-invalid': submitted && fd.producto.errors }"
+                           formControlName="producto" type="text" [disableControl]="true" required />
+                    <input type="hidden" name="idProducto" id="idProducto" formControlName="idProducto"/>
+
+                    <span *ngIf="modalMode!==0" class="input-group-append">
+                    <button (click)="productList( $event )" class="btn btn-info text-white"><i class="cil-menu"></i></button>
+                  </span>
+                    <div *ngIf="submitted && fd.producto.errors" class="invalid-feedback">
+                      <div *ngIf="fd.producto.errors.required">El producto es requerido</div>
+                    </div>
+
+                  </div>
+
+                </div>
+                <div class="col-6">
+                  <label class="col-form-label" for="marcaInput">Marca</label>
+                  <input id="marcaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.marca.errors }"
+                         formControlName="marca" size="16" type="text" [disableControl]="modalMode===0" required>
+                  <div *ngIf="submitted && fd.marca.errors" class="invalid-feedback">
+                    <div *ngIf="fd.marca.errors.required">la marca es requerida</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="col-form-label" for="descripcionInput">Descripción</label>
+                  <div class="controls">
+                    <div class="input-prepend input-group">
+                <textarea id="descripcionInput" class="form-control" formControlName="descripcion" size="16" type="text"
+                          [disableControl]="modalMode===0"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-6">
+                  <label class="col-form-label" for="marcaInput">Cantidad</label>
+                  <input id="cantidadInput" class="form-control"
+                         [ngClass]="{ 'is-invalid': submitted && fd.cantidad.errors }"
+                         formControlName="cantidad" size="16" type="number" [disableControl]="modalMode===0" required>
+                  <div *ngIf="submitted && fd.cantidad.errors" class="invalid-feedback">
+                    <div *ngIf="fd.cantidad.errors.required">la cantidad es requerida</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label class="col-form-label" for="precioInput">Precio</label>
+                  <input id="precioInput" class="form-control"
+                         [ngClass]="{ 'is-invalid': submitted && fd.precio.errors }"
+                         formControlName="precio" size="16" type="number" [disableControl]="modalMode===0" required>
+                  <div *ngIf="submitted && fd.precio.errors" class="invalid-feedback">
+                    <div *ngIf="fd.precio.errors.required">El precio es requerido</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <label class="col-form-label" for="instalacionInput">Instalación</label>
+                  <div class="controls">
+                    <div class="input-prepend input-group">
+
+                      <input id="instalacionInput" class="form-control"
+                             [ngClass]="{ 'is-invalid': submitted && fd.requiereInstalacion.errors }"
+                             formControlName="requiereInstalacion"
+                             size="16" type="text" [disableControl]="modalMode===0" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label class="col-form-label" for="garantiaInput">Garantía</label>
+                  <div class="controls">
+                    <div class="input-prepend input-group">
+
+                      <input id="garantiaInput" class="form-control"
+                             [ngClass]="{ 'is-invalid': submitted && fd.garantia.errors }" formControlName="garantia"
+                             size="16" type="text" [disableControl]="modalMode===0" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <label class="col-form-label" for="tiempoEntregaInput">Tiempo Entrega</label>
+                  <input id="tiempoEntregaInput" class="form-control"
+                         [ngClass]="{ 'is-invalid': submitted && fd.tiempoEntrega.errors }"
+                         formControlName="tiempoEntrega"
+                         size="16" type="text" [disableControl]="modalMode===0" required>
+                  <div *ngIf="submitted && fd.tiempoEntrega.errors" class="invalid-feedback">
+                    <div *ngIf="fd.tiempoEntrega.errors.required">El tiempoEntrega es requerido</div>
+                  </div>
+                </div>
+                <div class="col-6"></div>
+
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary btn-secondary" type="button" (click)="dismissDetail()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
+          </div>
+        </form>
+      </div>
+
+
+      <div *ngIf="(detalles && detalles.length>0) && !showDetailData" class="col-12">
+
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let items of detalles">
+            <td>{{ items.producto ? items.producto.descripcion : items.descripcion }}</td>
+            <td>{{items.cantidad}}</td>
+            <td>{{items.precio}}</td>
+            <td>
+              <button (click)="openToModifyDetail(items, 2)" *ngIf="accesos.cambio==='Y'"
+                      class="btn btn-warning text-white"><i
+                class="cil-pencil"></i></button>
+              <button
+                (click)="openToDelete(items.id, (items.producto ? items.producto.descripcion: items.descripcion), 2 )"
+                *ngIf="accesos.baja==='Y'"
+                class="btn btn-danger text-white"><i class="cil-trash"></i></button>
+              <button (click)="openToModifyDetail(items, 0)" *ngIf="accesos.consulta==='Y'"
+                      class="btn btn-info text-white"><i
+                class="cil-find-in-page"></i></button>
+
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+
+
+    </div>
+  </div>
 </div>
 
 <!--Modal de Eliminacion-->
@@ -173,7 +415,7 @@ aria-hidden="true">
       </div>
       <div class="modal-body">
         <p>¿Desea eliminar el registro?</p>
-        <p>{{selId+' - '+ 'Cotización: ' + selName}}</p>
+        <p>{{selId + ' - ' + deletetype === 1 ? 'Cotización: ' : 'Producto: ' + selName}}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="deleteModal.hide()">Cancelar
@@ -184,104 +426,107 @@ aria-hidden="true">
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!--Modal de Detalle.ts-->
-<div bsModal #entityModalDetail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myDetaillLabel"
+
+<div bsModal #clienteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myDetaillLabel"
      aria-hidden="true">
-  <div class="modal-dialog modal-primary" role="document">
+  <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{title}}</h4>
-        <button type="button" class="close" (click)="entityModalDetail.hide()" aria-label="Close">
+        <h4 class="modal-title">Clientes</h4>
+        <button type="button" class="close" (click)="clientModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-              <form class="form-horizontal" [formGroup]="modalFormDetail" (ngSubmit)="saveChangesDetail()">
-                <div class="modal-body">
-                  <div class="form-group">
-                    <label class="col-form-label" for="productoSelect">Producto</label>
-                    <select id="productoSelect" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.producto.errors }"
-                            formControlName="producto" name="productoSelect" [disableControl]="modalMode===0" required>
-                      <option *ngFor="let p of productos" value="{{p.id}}">{{p.descripcion}}</option>
-                    </select>
-                    <div *ngIf="submitted && fd.producto.errors" class="invalid-feedback">
-                      <div *ngIf="fd.producto.errors.required">El producto es requerido</div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="descripcionInput">Descripción</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <input id="descripcionInput" class="form-control" formControlName="descripcion" size="16" type="text" [disableControl]="modalMode===0">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="marcaInput">Marca</label>
-                        <input id="marcaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.marca.errors }" formControlName="marca" size="16" type="text" [disableControl]="modalMode===0" required>
-                        <div *ngIf="submitted && fd.marca.errors" class="invalid-feedback">
-                          <div *ngIf="fd.marca.errors.required">la marca es requerida</div>
-                        </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="marcaInput">Cantidad</label>
-                        <input id="cantidadInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.cantidad.errors }" formControlName="cantidad" size="16" type="number" [disableControl]="modalMode===0" required>
-                        <div *ngIf="submitted && fd.cantidad.errors" class="invalid-feedback">
-                          <div *ngIf="fd.cantidad.errors.required">la cantidad es requerida</div>
-                        </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="precioInput">Precio</label>
-                        <input id="precioInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.precio.errors }" formControlName="precio" size="16" type="number" [disableControl]="modalMode===0" required>
-                        <div *ngIf="submitted && fd.precio.errors" class="invalid-feedback">
-                          <div *ngIf="fd.precio.errors.required">El precio es requerido</div>
-                        </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="tiempoEntregaInput">Tiempo Entrega</label>
-                        <input id="tiempoEntregaInput" class="form-control" [ngClass]="{ 'is-invalid': submitted && fd.tiempoEntrega.errors }" formControlName="tiempoEntrega" size="16" type="text" [disableControl]="modalMode===0" required>
-                        <div *ngIf="submitted && fd.tiempoEntrega.errors" class="invalid-feedback">
-                          <div *ngIf="fd.tiempoEntrega.errors.required">El tiempoEntrega es requerido</div>
-                        </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="requiereInstalacionSelect">Requiere Instalación</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <select id="requiereInstalacionSelect" class="form-control" formControlName="requiereInstalacion" name="requiereInstalacionSelect" [disableControl]="modalMode===0">
-                          <option value="Y">Si</option>
-                          <option value="N">No</option>
-                        </select>
-                      </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-form-label" for="garantiaSelect">Garantía</label>
-                  <div class="controls">
-                    <div class="input-prepend input-group">
-                      <select id="garantiaSelect" class="form-control" formControlName="garantia" name="garantiaSelect" [disableControl]="modalMode===0">
-                        <option value="Y">Si</option>
-                        <option value="N">No</option>
-                      </select>
-                    </div>
-                  </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="cil-search"></i></span>
               </div>
-                <div class="form-group">
-                  <label class="col-form-label" for="mantenimientoSelect">Mantenimiento</label>
-                  <div class="controls">
-                    <div class="input-prepend input-group">
-                      <select id="mantenimientoSelect" class="form-control" formControlName="mantenimiento" name="mantenimientoSelect" [disableControl]="modalMode===0">
-                        <option value="Y">Si</option>
-                        <option value="N">No</option>
-                      </select>
-                    </div>
-                  </div>
+              <div class="search-hero">
+                <input #clientInput class="form-control" type="search" [(ngModel)]="searchClient"
+                       (input)="filterClient(clientInput.value)" placeholder="Buscar cliente" autocomplete="off" size="35">
               </div>
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
-                  <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
-                </div>
-            </form>
-            </div>
-        </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+
+            <table class="table table-responsive-sm table-sm table-hover">
+              <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Nit</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let cli of filteredClients" (click)="selectClient( cli )">
+                <td>{{ cli.nombre }}</td>
+                <td>{{ cli.nit }}</td>
+              </tr>
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<div bsModal #productoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myDetaillLabel"
+     aria-hidden="true">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Productos</h4>
+        <button type="button" class="close" (click)="productoModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="cil-search"></i></span>
+              </div>
+              <div class="search-hero">
+                <input #productInput class="form-control" type="search" [(ngModel)]="searchProduct"
+                       (input)="filterProduct(productInput.value)" placeholder="Buscar producto" autocomplete="off" size="35">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+
+            <table class="table table-responsive-sm table-sm table-hover">
+              <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Nit</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let pro of filteredProducts" (click)="selectProduct( pro )">
+                <td>{{ pro.descripcion }}</td>
+                <td>{{ pro.precioVenta }}</td>
+              </tr>
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

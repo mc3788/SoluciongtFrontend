@@ -28,9 +28,10 @@ export class LoginComponent {
     this.authService.login( this.loginForm.value.username, this.loginForm.value.password )
       .subscribe( async resp => {
         this.authService.token = resp['token'];
+        this.authService.id = resp['id'];
         this.authService.userId = this.loginForm.value.username;
         await this.authService.saveSession();
-        await this.authService.loadAccess();
+        await this.authService.getAccess();
         await this.router.navigate(['/dashboard']);
       }, err => {
         this.error = true;

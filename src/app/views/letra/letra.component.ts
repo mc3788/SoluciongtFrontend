@@ -68,8 +68,10 @@ export class LetraComponent implements OnInit {
       status: ['', Validators.required]
     });
 
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Series');
-      
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Series');
+    });
+
      }
   get f() { return this.modalForm.controls; }
 
@@ -99,7 +101,7 @@ export class LetraComponent implements OnInit {
           serie: [this.detail.serie],
           usuario: [this.detail.idUsuario],
           status: [this.detail.status],
-          
+
         });
 
         this.entityModal.show();
@@ -157,13 +159,13 @@ export class LetraComponent implements OnInit {
     if (this.modalForm.invalid) {
       return;
     }
-    
+
     const dto: LetraDTO = {
       serie: this.modalForm.value.serie,
-      idUsuario: this.modalForm.value.usuario,    
+      idUsuario: this.modalForm.value.usuario,
       status: this.modalForm.value.status
     };
-    
+
     if (this.modalMode === 1) {
       // Servicio para guardar nueva entidad
       this.dataService.insertNewEntity('serie', this.authService.token, dto)

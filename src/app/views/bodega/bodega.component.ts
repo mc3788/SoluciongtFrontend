@@ -56,7 +56,9 @@ export class BodegaComponent implements OnInit {
       estado: [0]
     });
 
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Bodegas');
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Bodegas');
+    });
 
   }
 

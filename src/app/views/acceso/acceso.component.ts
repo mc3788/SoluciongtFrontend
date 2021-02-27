@@ -79,7 +79,9 @@ export class AccesoComponent implements OnInit, OnDestroy {
       consulta: ['']
     });
 
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Accesos');
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Accesos');
+    });
   }
 
   ngOnInit() {

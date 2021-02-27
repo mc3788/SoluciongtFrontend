@@ -5,6 +5,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from '../../assets/vfs_fonts';
 import {NumerosALetras} from './numeros-a-letras';
 import {Cotizacion} from '../interface/bo/Cotizacion';
+import {DatePipe} from '@angular/common';
 
 @Injectable()
 export class CreaPdf {
@@ -21,7 +22,9 @@ export class CreaPdf {
   };
   info: Cotizacion;
 
-  constructor( private http: HttpClient, private aLetras: NumerosALetras ) {
+  constructor( private http: HttpClient,
+               private aLetras: NumerosALetras,
+               private datePipe: DatePipe ) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
 
@@ -68,7 +71,7 @@ export class CreaPdf {
         {image: value, fit: ['225', '225'], absolutePosition: {x: 365, y: 15} },
         { columns: [
             { text: [ { text: 'FECHA  ', bold: true} ,
-                this.formatDate( this.info.fecha ) ]},
+                this.datePipe.transform( this.info.fecha, 'dd-MM-yyyy' ) ]},
           ], margin: [this.marginHeaderLeft, 20, 0, 0], style: 'header' },
         { columns: [
             {text: [ {text: 'COTIZACION NO.  ', bold: true},
@@ -281,20 +284,4 @@ export class CreaPdf {
     return value.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
   }
 
-  private formatDate(date) {
-    const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    const year = d.getFullYear();
-
-    if (month.length < 2) {
-      month = '0' + month;
-    }
-
-    if (day.length < 2) {
-      day = '0' + day;
-    }
-
-    return [day, month, year].join('-');
-  }
 }

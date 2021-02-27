@@ -38,7 +38,9 @@ export class DashboardComponent {
         console.error( JSON.stringify(error) );
       });
       */
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Dashboard');
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Dashboard');
+    });
   }
 
   firstDay(){

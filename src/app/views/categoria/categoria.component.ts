@@ -74,7 +74,9 @@ export class CategoriaComponent implements OnInit {
       observaciones: ['']
     });
 
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Categorias');
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Categorias');
+    });
   }
 
   get f() { return this.modalForm.controls; }

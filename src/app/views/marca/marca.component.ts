@@ -54,7 +54,9 @@ export class MarcaComponent implements OnInit {
       nombre: ['', Validators.required ]
       });
 
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Marca');
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Marca');
+    });
   }
 
   get f() { return this.modalForm.controls; }

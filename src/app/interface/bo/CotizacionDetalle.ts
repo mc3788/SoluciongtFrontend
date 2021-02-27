@@ -1,28 +1,32 @@
+import {Producto} from './Producto';
+
 export class CotizacionDetalle {
 
-  id : number;
-  idCotizacion : number;
-  idProducto : string;
-  descripcion : string;
-  marca : number;
-  cantidad : number;
-  precio : string;
+  id: number;
+  idCotizacion: number;
+  idProducto: string;
+  descripcion: string;
+  marca: number;
+  cantidad: number;
+  precio: string;
   tiempoEntrega: string;
-  requiereinstalacion: string;
-  garantia : string;
-  mantenimiento : string
-    
-    constructor(id : number,
-      idCotizacion : number,
-      idProducto : string,
-      descripcion : string,
-      marca : number,
-      cantidad : number,
-      precio : string,
+  requiereInstalacion: string;
+  garantia: string;
+  mantenimiento: string;
+  producto: Producto;
+
+    constructor(id: number,
+      idCotizacion: number,
+      idProducto: string,
+      descripcion: string,
+      marca: number,
+      cantidad: number,
+      precio: string,
       tiempoEntrega: string,
-      requiereinstalacion: string,
-      garantia : string,
-      mantenimiento : string
+      requiereInstalacion: string,
+      garantia: string,
+      mantenimiento: string,
+      producto: Producto
     ) {
       this.id = id;
       this.idCotizacion = idCotizacion;
@@ -32,10 +36,10 @@ export class CotizacionDetalle {
       this.cantidad = cantidad;
       this.precio = precio;
       this.tiempoEntrega = tiempoEntrega;
-      this.requiereinstalacion = requiereinstalacion;
+      this.requiereInstalacion = requiereInstalacion;
       this.garantia = garantia;
-      this.mantenimiento = mantenimiento
+      this.mantenimiento = mantenimiento;
+      this.producto = producto;
     }
-  
+
   }
-  

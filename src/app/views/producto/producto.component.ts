@@ -52,12 +52,15 @@ export class ProductoComponent implements OnInit {
     // Inicializa el form construyendolo con los campos
     this.modalForm = this.formBuilder.group({
       descripcion: ['', Validators.required],
+      marca: ['', Validators.required],
       precioCosto: ['', Validators.required],
       precioVenta: ['', Validators.required],
       observaciones: ['']
     });
 
-    this.accesos = this.authService.accesos.find( a => a.opcion === 'Productos');
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Productos');
+    });
 
   }
 
@@ -69,6 +72,7 @@ export class ProductoComponent implements OnInit {
     this.title = 'Agregar';
     this.modalForm = this.formBuilder.group({
       descripcion: [''],
+      marca: [''],
       precioCosto: [''],
       precioVenta: [''],
       observaciones: ['']
@@ -88,6 +92,7 @@ export class ProductoComponent implements OnInit {
         // se ingresan los valores en el form y validaciones
         this.modalForm = this.formBuilder.group({
           descripcion: [this.detail.descripcion],
+          marca: [this.detail.marca],
           precioCosto: [this.detail.precioCosto],
           precioVenta: [this.detail.precioVenta],
           observaciones: [this.detail.observaciones]
@@ -113,6 +118,7 @@ export class ProductoComponent implements OnInit {
         // se ingresan los valores en el form y validaciones
         this.modalForm = this.formBuilder.group({
           descripcion: [this.detail.descripcion],
+          marca: [this.detail.marca],
           precioCosto: [this.detail.precioCosto],
           precioVenta: [this.detail.precioVenta],
           observaciones: [this.detail.observaciones]
@@ -150,6 +156,7 @@ export class ProductoComponent implements OnInit {
 
     const dto: ProductoDTO = {
       descripcion: this.modalForm.value.descripcion,
+      marca: this.modalForm.value.marca,
       precioCosto: this.modalForm.value.precioCosto,
       precioVenta: this.modalForm.value.precioVenta,
       observaciones: this.modalForm.value.observaciones

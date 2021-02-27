@@ -57,7 +57,7 @@ export class ContactoComponent implements OnInit {
       }, error => {
         console.error( JSON.stringify(error) );
       });
-  
+
        // Inicializa el form construyendolo con los campos
        this.modalForm = this.formBuilder.group({
         cliente: ['', Validators.required],
@@ -65,10 +65,12 @@ export class ContactoComponent implements OnInit {
         telefono: [''],
         direccion: [''],
         observaciones: ['']
-  
+
       });
-      this.accesos = this.authService.accesos.find( a => a.opcion === 'Contactos');
-  
+    this.authService.getAccess().then( access => {
+      this.accesos = access.find(a => a.opcion === 'Contactos');
+    });
+
   }
   get f() { return this.modalForm.controls; }
 
