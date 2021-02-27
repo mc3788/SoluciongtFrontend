@@ -10,6 +10,8 @@ export class Razon {
     regimenImpuesto: string;
     telefono: string;
     correoElectronico: string;
+    representanteFirma: string;
+    numeroCelular: string;
 
      constructor(  id: number,
                     nombre: string,
@@ -21,6 +23,8 @@ export class Razon {
                     regimenImpuesto: string,
                     telefono: string,
                     correoElectronico: string,
+                    representanteFirma: string,
+                    numeroCelular: string
                  ) {
           this.id = id;
           this.nombre = nombre;
@@ -31,7 +35,9 @@ export class Razon {
           this.cuentaBancaria = cuentaBancaria;
           this.regimenImpuesto = regimenImpuesto;
           this.telefono = telefono;
-          this.correoElectronico = correoElectronico
+          this.correoElectronico = correoElectronico;
+          this.representanteFirma = representanteFirma;
+          this.numeroCelular =  numeroCelular;
       }
 
   }

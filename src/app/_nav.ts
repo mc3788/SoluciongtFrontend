@@ -68,6 +68,11 @@ export const navItems: INavData[] = [
         name: 'Proveedores',
         url: '/proveedor',
         icon: 'cil-factory',
+      },
+      {
+        name: 'Bodegas',
+        url: '/bodega',
+        icon: 'cil-factory',
       }
     ]
   },
@@ -75,21 +80,21 @@ export const navItems: INavData[] = [
     name: 'Entidades',
     url: '/entidades',
     icon: 'cil-briefcase',
-    children:[
+    children: [
       {
         name: 'Clientes',
         url: '/cliente',
-        icon: 'cil-contact', 
+        icon: 'cil-contact',
       },
       {
         name: 'Contactos',
         url: '/contacto',
-        icon: 'cil-voice-over-record', 
+        icon: 'cil-voice-over-record',
       },
       {
         name: 'Razon',
         url: '/razonsocial',
-        icon: 'cil-file', 
+        icon: 'cil-file',
       }
     ]
   }

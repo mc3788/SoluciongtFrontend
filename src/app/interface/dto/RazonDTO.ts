@@ -9,8 +9,9 @@ export class RazonDTO {
                   regimenImpuesto: string,
                   telefono: string,
                   correoElectronico: string,
+                  representanteFirma: string,
+                  numeroCelular: string
          ) {
     }
-  
+
   }
-  

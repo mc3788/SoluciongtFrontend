@@ -14,6 +14,8 @@ import {CreaPdf} from '../../utils/crea-pdf';
 import {DatePipe} from '@angular/common';
 import {Razon} from '../../interface/bo/Razon';
 import {CotizacionDetalle} from '../../interface/bo/CotizacionDetalle';
+import {Bodega} from '../../interface/bo/Bodega';
+import {FormatAmountPipe} from '../../pipes/format-amount.pipe';
 
 
 @Component({
@@ -45,15 +47,17 @@ export class CotizadormanualComponent implements OnInit {
   cotizaciones: Cotizacion[];
   detail: Cotizacion;
   cotizacionDetail: CotizacionDetalle;
+  detalles: CotizacionDetalle[];
   clientes: Cliente[];
   filteredClients: Cliente[];
   productos: Producto[];
   filteredProducts: Producto[];
   razones: Razon[];
   letra: Letra;
-  detalles: CotizacionDetalle[];
-
   series: Letra[];
+
+  bodegas: Bodega[];
+
   deletetype = 0;
 
   isReady = false;
@@ -76,7 +80,8 @@ export class CotizadormanualComponent implements OnInit {
               public formBuilder: FormBuilder,
               private authService: AuthService,
               private creaPdf: CreaPdf,
-              private datePipe: DatePipe) {
+              private datePipe: DatePipe,
+              public formatAmount: FormatAmountPipe) {
 
     this.authService.getAccess().then( access => {
       this.accesos = access.find(a => a.opcion === 'Manual');
@@ -112,6 +117,13 @@ export class CotizadormanualComponent implements OnInit {
         console.error(JSON.stringify(error));
       });
 
+    this.dataService.getAllItemsFromEntity('bodega', this.authService.token)
+      .subscribe(resp => {
+        this.bodegas = (<Bodega[]>resp);
+      }, error => {
+        console.error(JSON.stringify(error));
+      });
+
     this.dataService.getAllItemsFromEntity('razonSocial', this.authService.token)
       .subscribe(resp => {
         this.razones = (<Razon[]>resp);
@@ -139,6 +151,7 @@ export class CotizadormanualComponent implements OnInit {
       codigoPpr: [],
       oferta: [''],
       razon: [''],
+      bodega: [''],
       serie: [ this.letra ? this.letra.id : '' ],
       tipo: ['M'],
       idUsuario: ['']
@@ -215,6 +228,7 @@ export class CotizadormanualComponent implements OnInit {
       codigoPpr: [],
       oferta: [''],
       razon: [''],
+      bodega: [''],
       tipo: [''],
       serie: [ this.letra ? this.letra.id : '' ],
     });
@@ -246,6 +260,7 @@ export class CotizadormanualComponent implements OnInit {
           codigoPpr: [this.detail.codigoPPR],
           oferta: [this.detail.oferta],
           razon: [this.detail.idRazonSocial],
+          bodega: [this.detail.idBodegaEntrega],
           tipo: [this.detail.tipo],
           serie: [ this.detail.idSerie ]
         });
@@ -272,6 +287,7 @@ export class CotizadormanualComponent implements OnInit {
           idCliente: [this.detail.idCliente],
           serie: [this.detail.idSerie],
           razon: [this.detail.idRazonSocial],
+          bodega: [this.detail.idBodegaEntrega],
           fecha: [ this.datePipe.transform( this.detail.fecha, 'yyyy-MM-dd') ],
           numero: [this.detail.numero],
           usuario: [this.detail.idUsuario],
@@ -351,6 +367,7 @@ export class CotizadormanualComponent implements OnInit {
       codigoPPR: this.modalForm.value.codigoPpr,
       oferta: this.modalForm.value.oferta,
       idRazonSocial: this.modalForm.value.razon,
+      idBodegaEntrega: this.modalForm.value.bodega,
       tipo: 'M',
       idSerie: this.modalForm.value.serie,
       idUsuario: this.authService.id
@@ -411,7 +428,7 @@ export class CotizadormanualComponent implements OnInit {
       precio: [''],
       tiempoEntrega: [''],
       requiereInstalacion: [''],
-      garantia: [],
+      garantia: [''],
       mantenimiento: ['']
     });
 

@@ -6,6 +6,7 @@ import * as pdfFonts from '../../assets/vfs_fonts';
 import {NumerosALetras} from './numeros-a-letras';
 import {Cotizacion} from '../interface/bo/Cotizacion';
 import {DatePipe} from '@angular/common';
+import {FormatAmountPipe} from '../pipes/format-amount.pipe';
 
 @Injectable()
 export class CreaPdf {
@@ -17,14 +18,15 @@ export class CreaPdf {
     tiempoEntrega: '',
     garantia: '',
     requiereInstalacion: '',
-    lugarentrega: '****',
+    lugarentrega: '',
 
   };
   info: Cotizacion;
 
   constructor( private http: HttpClient,
                private aLetras: NumerosALetras,
-               private datePipe: DatePipe ) {
+               private datePipe: DatePipe,
+               private formatAmount: FormatAmountPipe) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
 
@@ -94,8 +96,8 @@ export class CreaPdf {
     return [
       // {text: '', margin: [0, 30, 0, 0]},
       {text: 'SEÑORES', bold: true},
-      {text: this.info.cliente.nombre, bold: true},
-      {text: '****', bold: true}
+      {text: this.info.cliente.departamento, bold: true},
+      {text: this.info.cliente.nombre, bold: true}
 
     ];
   }
@@ -136,11 +138,11 @@ export class CreaPdf {
         {text: dd.descripcion, bold: true },
         { columns: [
             { width: 'auto', text: 'Q', bold: true },
-            { width: '*', text: this.formatAmount( dd.precio ), alignment: 'right', bold: true }
+            { width: '*', text: this.formatAmount.transform( dd.precio ), alignment: 'right', bold: true }
           ], margin: [ 0, 45, 0 , 0] },
         { columns: [
             { width: 'auto', text: 'Q', bold: true },
-            { width: '*', text: this.formatAmount( dd.precio * dd.cantidad) , alignment: 'right', bold: true }
+            { width: '*', text: this.formatAmount.transform( dd.precio * dd.cantidad) , alignment: 'right', bold: true }
           ], margin: [ 0, 45, 0 , 0] }
       ];
       tot = tot + ( dd.precio * dd.cantidad );
@@ -165,7 +167,7 @@ export class CreaPdf {
       {text: 'TOTAL', bold: true, alignment: 'right', style: 'columnHeader', margin: [ 0, 2, 0 , 0] },
       { columns: [
           {width: 'auto', text: 'Q', bold: true },
-          {width: '*', text: this.formatAmount(tot), alignment: 'right', bold: true }],
+          {width: '*', text: this.formatAmount.transform(tot), alignment: 'right', bold: true }],
         margin: [ 0, 2, 0 , 0] , style: 'columnHeader'}
     ]);
 
@@ -196,7 +198,7 @@ export class CreaPdf {
       { text: `GARANTIA: ${this.data.garantia}`, bold: true },
       { text: `INSTALACION: ${this.data.requiereInstalacion}`, bold: true },
       { text: [ { text: 'SOSTENIMIENTO DE OFERTA: ', bold: true }, this.info.oferta] },
-      { text: [ { text: 'LUGAR DE ENTREGA: ', bold: true }, this.data.lugarentrega ]}
+      { text: [ { text: 'LUGAR DE ENTREGA: ', bold: true }, this.info.bodega.descripcion ]}
     ];
   }
 
@@ -204,23 +206,23 @@ export class CreaPdf {
     return [
       { text: '', margin: [0, 20, 0, 0] },
       { text: `RAZON SOCIAL: ${this.info.razonsocial.nombre}`, bold: true },
-      { text: `NOMBRE COMERCIAL: ****` },
-      { text: `NOMBRE DEL REPRESENTANTE LEGAL: ****` },
+      { text: `NOMBRE COMERCIAL: ${this.info.razonsocial.nombreComercial}` },
+      { text: `NOMBRE DEL REPRESENTANTE LEGAL: ${this.info.razonsocial.representanteLegal}` },
       { text: `DIRECCIÓN: ${this.info.razonsocial.direccion}` },
-      { text: `NIT: ****` },
-      { text: `REGIMEN DE IMPUESTO SOBRE LA RENTA: ****` },
-      { text: `NÚMERO DE CUENTA BANCARIA MONETARIA: ****` },
-      { text: `TELEFONO: ****` },
-      { text: `CORREO ELECTRÓNICO: ****` },
+      { text: `NIT: ${this.info.razonsocial.nit}` },
+      { text: `REGIMEN DE IMPUESTO SOBRE LA RENTA: ${this.info.razonsocial.regimenImpuesto}` },
+      { text: `NÚMERO DE CUENTA BANCARIA MONETARIA: ${this.info.razonsocial.cuentaBancaria}` },
+      { text: `TELEFONO: ${this.info.razonsocial.telefono}` },
+      { text: `CORREO ELECTRÓNICO: ${this.info.razonsocial.correoElectronico}` },
     ];
   }
 
   private getSignature(): object[] {
     return [
       { text: '', margin: [0, 40, 0, 0] },
-      { text: 'ALEJANDRO RAMIREZ' },
+      { text: `${this.info.razonsocial.representanteFirma}` },
       { text: 'REPRESENTANTE LEGAL' },
-      { text: 'CELULAR 5516-2909' }
+      { text: `CELULAR ${this.info.razonsocial.numeroCelular}` }
     ];
   }
 
@@ -278,10 +280,6 @@ export class CreaPdf {
         });
     });
 
-  }
-
-  private formatAmount( value ): string {
-    return value.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
   }
 
 }

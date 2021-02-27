@@ -59,6 +59,8 @@ export class RazonsocialComponent implements OnInit {
       regimenImpuesto: [''],
       telefono: ['', Validators.required],
       correoElectronico: ['', Validators.required],
+      representanteFirma: ['', Validators.required],
+      numeroCelular: ['', Validators.required],
 
     });
 
@@ -85,6 +87,8 @@ export class RazonsocialComponent implements OnInit {
         regimenImpuesto: [''],
         telefono: [''],
         correoElectronico: [''],
+        representanteFirma: [''],
+        numeroCelular: [''],
       });
       this.entityModal.show();
     }
@@ -109,6 +113,8 @@ export class RazonsocialComponent implements OnInit {
             regimenImpuesto: [this.detail.regimenImpuesto],
             telefono: [this.detail.telefono],
             correoElectronico: [this.detail.correoElectronico],
+            representanteFirma: [this.detail.representanteFirma],
+            numeroCelular: [this.detail.numeroCelular]
           });
 
           this.entityModal.show();
@@ -140,6 +146,8 @@ export class RazonsocialComponent implements OnInit {
             regimenImpuesto: [this.detail.regimenImpuesto],
             telefono: [this.detail.telefono],
             correoElectronico: [this.detail.correoElectronico],
+            representanteFirma: [this.detail.representanteFirma],
+            numeroCelular: [this.detail.numeroCelular]
           });
 
           this.entityModal.show();
@@ -182,7 +190,9 @@ export class RazonsocialComponent implements OnInit {
         regimenImpuesto: this.modalForm.value.regimenImpuesto,
         telefono: this.modalForm.value.telefono,
         direccion: this.modalForm.value.direccion,
-        correoElectronico: this.modalForm.value.correoElectronico
+        correoElectronico: this.modalForm.value.correoElectronico,
+        representanteFirma: this.modalForm.value.representanteFirma,
+        numeroCelular: this.modalForm.value.numeroCelular
       };
 
       if (this.modalMode === 1) {

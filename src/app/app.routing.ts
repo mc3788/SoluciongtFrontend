@@ -37,11 +37,11 @@ export const routes: Routes = [
         loadChildren: () => import('./views/categoria/categoria.module').then(m => m.CategoriaModule)},
       { path: 'marca',
         loadChildren: () => import('./views/marca/marca.module').then(m => m.MarcaModule)},
-      { path: 'serie', 
+      { path: 'serie',
         loadChildren: () => import('./views/letra/letra.module').then(m => m.LetraModule) },
-      { path: 'cotizadormanual', 
+      { path: 'cotizadormanual',
         loadChildren: () => import('./views/cotizadormanual/cotizadormanual.module').then(m => m.CotizadormanualModule) },
-      { path: 'cotizadorautomatico', 
+      { path: 'cotizadorautomatico',
         loadChildren: () => import('./views/cotizadorautomatico/cotizadorautomatico.module').then(m => m.CotizadorautomaticoModule) },
       { path: 'producto',
       loadChildren: () => import('./views/producto/producto.module').then(m => m.ProductoModule) },
@@ -51,15 +51,15 @@ export const routes: Routes = [
         loadChildren: () => import('./views/cliente/cliente.module').then(m => m.ClienteModule) },
       { path: 'acceso',
         loadChildren: () => import('./views/acceso/acceso.module').then(m => m.AccesoModule) },
-      { path: 'contacto', 
+      { path: 'contacto',
         loadChildren: () => import('./views/contacto/contacto.module').then(m => m.ContactoModule) },
-      { path: 'razonsocial', 
+      { path: 'razonsocial',
         loadChildren: () => import('./views/razonsocial/razonsocial.module').then(m => m.RazonsocialModule) },
-      { path: 'proveedor', 
+      { path: 'proveedor',
         loadChildren: () => import('./views/proveedor/proveedor.module').then(m => m.ProveedorModule) }
     ]
   },
-  
+
 ];
 
 @NgModule({

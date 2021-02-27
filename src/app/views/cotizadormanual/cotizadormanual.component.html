@@ -204,7 +204,20 @@
           </div>
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="col-form-label" for="bodegaSelect">Lugar de entrega</label>
+                <select id="bodegaSelect" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.bodega.errors }"
+                        formControlName="bodega" name="bodegaSelect" [disableControl]="modalMode===0" required>
+                  <option *ngFor="let c of bodegas" value="{{c.id}}">{{c.descripcion}}</option>
+                </select>
+                <div *ngIf="submitted && f.bodega.errors" class="invalid-feedback">
+                  <div *ngIf="f.bodega.errors.required">El lugar de entrega es requerido</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
               <div class="form-group">
                 <label class="col-form-label" for="razonSelect">Razón social</label>
                 <select id="razonSelect" class="form-control"
@@ -376,7 +389,7 @@
           <tr *ngFor="let items of detalles">
             <td>{{ items.producto ? items.producto.descripcion : items.descripcion }}</td>
             <td>{{items.cantidad}}</td>
-            <td>{{items.precio}}</td>
+            <td>{{items.precio | formatAmount }}</td>
             <td>
               <button (click)="openToModifyDetail(items, 2)" *ngIf="accesos.cambio==='Y'"
                       class="btn btn-warning text-white"><i

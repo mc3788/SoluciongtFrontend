@@ -8,7 +8,6 @@ import { DataService } from './services/data.service';
 import { CreaPdf } from './utils/crea-pdf';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { HttpClientModule } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
@@ -46,6 +45,7 @@ import {AlertModule} from 'ngx-bootstrap';
 import {AuthService} from './services/auth.service';
 import {AuthGuardService} from './services/auth-guard.service';
 import {NumerosALetras} from './utils/numeros-a-letras';
+import {CustomPipesModule} from './pipes/custom-pipes.module';
 
 @NgModule({
   imports: [
@@ -64,6 +64,7 @@ import {NumerosALetras} from './utils/numeros-a-letras';
     PerfectScrollbarModule,
     HttpClientModule,
     PipesModule,
+    CustomPipesModule,
     GoogleChartsModule.forRoot()
   ],
   declarations: [
@@ -74,7 +75,10 @@ import {NumerosALetras} from './utils/numeros-a-letras';
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }, DataService, AuthService, AuthGuardService, CreaPdf, NumerosALetras, DatePipe],
-  bootstrap: [ AppComponent ]
+  }, DataService, AuthService, AuthGuardService, CreaPdf, NumerosALetras, DatePipe
+  ],
+  exports: [
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
