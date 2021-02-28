@@ -58,7 +58,7 @@ export class CotizadormanualComponent implements OnInit {
 
   bodegas: Bodega[];
 
-  deletetype = 0;
+  deletetype: number = 0;
 
   isReady = false;
 

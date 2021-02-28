@@ -429,7 +429,7 @@
       </div>
       <div class="modal-body">
         <p>¿Desea eliminar el registro?</p>
-        <p>{{selId + ' - ' + deletetype === 1 ? 'Cotización: ' : 'Producto: ' + selName}}</p>
+        <p>{{selId + ' - ' + ( deletetype === 1 ? 'Cotización: ' : 'Producto: ' ) + selName}}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="deleteModal.hide()">Cancelar
