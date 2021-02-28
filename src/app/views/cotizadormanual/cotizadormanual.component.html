@@ -231,13 +231,14 @@
               </div>
             </div>
           </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
+          </div>
 
         </form>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary btn-secondary" type="button" (click)="dismiss()">Cancelar</button>
-          <button type="submit" class="btn btn-primary" *ngIf="modalMode != 0">Guardar</button>
-        </div>
+
 
     </div>
   </div>
