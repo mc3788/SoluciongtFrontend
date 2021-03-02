@@ -41,7 +41,7 @@ export class RazonsocialComponent implements OnInit {
   constructor(private dataService: DataService,
               public formBuilder: FormBuilder,
               private authService: AuthService) {
-    this.dataService.getAllItemsFromEntity('razonsocial', this.authService.token)
+    this.dataService.getAllItemsFromEntity('razonSocial', this.authService.token)
       .subscribe(res => {
         this.razones = (<Razon[]>res);
       }, error => {
@@ -97,7 +97,7 @@ export class RazonsocialComponent implements OnInit {
       this.modalMode = 0;
       this.title = 'Consultar';
 
-      this.dataService.getEntityDetail('razonsocial', this.authService.token, id)
+      this.dataService.getEntityDetail('razonSocial', this.authService.token, id)
         .subscribe(resp => {
           // se convierten los datos recuperadps al objeto
           this.detail = (<Razon>resp);
@@ -130,7 +130,7 @@ export class RazonsocialComponent implements OnInit {
       this.modalMode = 2;
       this.title = 'Modificar';
 
-      this.dataService.getEntityDetail('razonsocial', this.authService.token, id)
+      this.dataService.getEntityDetail('razonSocial', this.authService.token, id)
         .subscribe(resp => {
           // se convierten los datos recuperadps al objeto
           this.detail = (<Razon>resp);
@@ -165,7 +165,7 @@ export class RazonsocialComponent implements OnInit {
     }
 
     deleteReg( ) {
-      this.dataService.deleteEntity('razonsocial', this.authService.token, this.selId)
+      this.dataService.deleteEntity('razonSocial', this.authService.token, this.selId)
         .subscribe(resp => {
           this.reload();
           this.deleteModal.hide();
@@ -197,7 +197,7 @@ export class RazonsocialComponent implements OnInit {
 
       if (this.modalMode === 1) {
         // Servicio para guardar nueva entidad
-        this.dataService.insertNewEntity('razonsocial', this.authService.token, dto)
+        this.dataService.insertNewEntity('razonSocial', this.authService.token, dto)
           .subscribe(resp => {
             this.reload();
             this.entityModal.hide();
@@ -210,7 +210,7 @@ export class RazonsocialComponent implements OnInit {
 
       } else if (this.modalMode === 2) {
         // se insertan los datos modificados con el servicio de edicion
-        this.dataService.editEntity('razonsocial', this.authService.token, this.detail.id, dto)
+        this.dataService.editEntity('razonSocial', this.authService.token, this.detail.id, dto)
           .subscribe(resp => {
             this.reload();
             this.entityModal.hide();
@@ -226,7 +226,7 @@ export class RazonsocialComponent implements OnInit {
     }
 
     reload() {
-      this.dataService.getAllItemsFromEntity( 'razonsocial', this.authService.token)
+      this.dataService.getAllItemsFromEntity( 'razonSocial', this.authService.token)
         .subscribe(resp => {
           this.razones = (<Razon[]> resp);
         }, error => {
